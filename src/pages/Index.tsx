@@ -6,6 +6,7 @@ import WelcomeScreen from '../components/WelcomeScreen';
 import RegistrationScreen from '../components/RegistrationScreen';
 import ProgramOutlineScreen from '../components/ProgramOutlineScreen';
 import AttendeeListScreen from '../components/AttendeeListScreen';
+import ResourcesScreen from '../components/ResourcesScreen';
 
 export interface Attendee {
   id: string;
@@ -14,7 +15,7 @@ export interface Attendee {
 }
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'attendees'>('qr');
+  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'attendees' | 'resources'>('qr');
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [currentUser, setCurrentUser] = useState<string>('');
 
@@ -62,13 +63,23 @@ const Index = () => {
         )}
         
         {currentScreen === 'program' && (
-          <ProgramOutlineScreen userName={currentUser} />
+          <ProgramOutlineScreen 
+            userName={currentUser} 
+            onViewResources={() => setCurrentScreen('resources')}
+          />
         )}
         
         {currentScreen === 'attendees' && (
           <AttendeeListScreen 
             attendees={attendees}
             onBack={() => setCurrentScreen('qr')}
+          />
+        )}
+
+        {currentScreen === 'resources' && (
+          <ResourcesScreen 
+            userName={currentUser}
+            onBack={() => setCurrentScreen('program')}
           />
         )}
       </div>
