@@ -1,15 +1,15 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Shield, Users, Settings, Link } from 'lucide-react';
+import { Shield, Users, LogIn, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import QRCode from 'qrcode';
 
 interface QRCodeScreenProps {
   attendeeCount: number;
-  onViewAdmin: () => void;
+  onAdminLogin: () => void;
 }
 
-const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAdmin }) => {
+const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onAdminLogin }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const qrUrl = `${window.location.origin}?join=true`;
 
@@ -27,7 +27,17 @@ const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAdmin 
   }, [qrUrl]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      {/* Admin Login Button - Top Left */}
+      <Button 
+        onClick={onAdminLogin}
+        className="absolute top-4 left-4 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/40 hover:to-blue-600/40 text-purple-300 border border-purple-300/30 text-xs"
+        size="sm"
+      >
+        <LogIn className="w-3 h-3 mr-1" />
+        Admin
+      </Button>
+
       <div className="backdrop-blur-lg bg-white/10 rounded-3xl p-4 md:p-6 max-w-xs sm:max-w-sm w-full border border-white/20 shadow-2xl">
         <div className="text-center space-y-4">
           {/* Header with Shield Icon */}
@@ -68,15 +78,6 @@ const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAdmin 
               </span>
             </div>
           </div>
-          
-          {/* Admin Dashboard Button */}
-          <Button 
-            onClick={onViewAdmin}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 md:py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm"
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            Admin Dashboard
-          </Button>
         </div>
       </div>
     </div>
