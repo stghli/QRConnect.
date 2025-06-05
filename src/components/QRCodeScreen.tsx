@@ -1,22 +1,22 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Shield, Users, Eye, Link } from 'lucide-react';
+import { Shield, Users, Settings, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import QRCode from 'qrcode';
 
 interface QRCodeScreenProps {
   attendeeCount: number;
-  onViewAttendees: () => void;
+  onViewAdmin: () => void;
 }
 
-const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAttendees }) => {
+const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAdmin }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const qrUrl = `${window.location.origin}?join=true`;
 
   useEffect(() => {
     if (canvasRef.current) {
       QRCode.toCanvas(canvasRef.current, qrUrl, {
-        width: 280,
+        width: 200,
         margin: 2,
         color: {
           dark: '#1e293b',
@@ -28,54 +28,54 @@ const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAttend
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="backdrop-blur-lg bg-white/10 rounded-3xl p-8 max-w-md w-full border border-white/20 shadow-2xl">
-        <div className="text-center space-y-6">
+      <div className="backdrop-blur-lg bg-white/10 rounded-3xl p-4 md:p-6 max-w-xs sm:max-w-sm w-full border border-white/20 shadow-2xl">
+        <div className="text-center space-y-4">
           {/* Header with Shield Icon */}
-          <div className="flex items-center justify-center space-x-3">
-            <Shield className="w-8 h-8 text-blue-300" />
-            <h1 className="text-3xl font-bold text-white">CyberSec</h1>
+          <div className="flex items-center justify-center space-x-2">
+            <Shield className="w-6 h-6 md:w-8 md:h-8 text-blue-300" />
+            <h1 className="text-xl md:text-2xl font-bold text-white">CyberSec</h1>
           </div>
           
-          <h2 className="text-xl font-semibold text-blue-200">Workshop 2025</h2>
+          <h2 className="text-lg md:text-xl font-semibold text-blue-200">Workshop 2025</h2>
           
           {/* QR Code */}
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          <div className="bg-white rounded-2xl p-4 shadow-lg">
             <canvas ref={canvasRef} className="mx-auto" />
           </div>
           
-          <p className="text-sm text-blue-200 opacity-90">
+          <p className="text-xs md:text-sm text-blue-200 opacity-90">
             Scan to join our cybersecurity workshop
           </p>
           
           {/* Fallback Link */}
-          <div className="bg-blue-600/20 rounded-xl p-4 backdrop-blur-sm border border-blue-300/20">
-            <p className="text-blue-200 text-sm mb-2">QR code not working?</p>
+          <div className="bg-blue-600/20 rounded-xl p-3 backdrop-blur-sm border border-blue-300/20">
+            <p className="text-blue-200 text-xs mb-2">QR code not working?</p>
             <a 
               href={qrUrl}
-              className="inline-flex items-center text-blue-300 hover:text-white transition-colors text-sm underline"
+              className="inline-flex items-center text-blue-300 hover:text-white transition-colors text-xs underline"
             >
-              <Link className="w-4 h-4 mr-1" />
+              <Link className="w-3 h-3 mr-1" />
               Click here to join
             </a>
           </div>
           
           {/* Attendance Counter */}
-          <div className="bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl p-4 backdrop-blur-sm border border-blue-300/20">
+          <div className="bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl p-3 backdrop-blur-sm border border-blue-300/20">
             <div className="flex items-center justify-center space-x-2">
-              <Users className="w-5 h-5 text-blue-300" />
-              <span className="text-white font-semibold">
+              <Users className="w-4 h-4 text-blue-300" />
+              <span className="text-white font-semibold text-sm">
                 {attendeeCount} Registered
               </span>
             </div>
           </div>
           
-          {/* View Attendees Button */}
+          {/* Admin Dashboard Button */}
           <Button 
-            onClick={onViewAttendees}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            onClick={onViewAdmin}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 md:py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm"
           >
-            <Eye className="w-4 h-4 mr-2" />
-            View Attendees
+            <Settings className="w-4 h-4 mr-2" />
+            Admin Dashboard
           </Button>
         </div>
       </div>

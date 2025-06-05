@@ -5,19 +5,22 @@ import QRCodeScreen from '../components/QRCodeScreen';
 import WelcomeScreen from '../components/WelcomeScreen';
 import RegistrationScreen from '../components/RegistrationScreen';
 import ProgramOutlineScreen from '../components/ProgramOutlineScreen';
-import AttendeeListScreen from '../components/AttendeeListScreen';
 import ResourcesScreen from '../components/ResourcesScreen';
+import AdminDashboard from '../components/AdminDashboard';
+import CodeVerificationScreen from '../components/CodeVerificationScreen';
 
 export interface Attendee {
   id: string;
   name: string;
   registeredAt: Date;
+  accessCode: string;
 }
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'attendees' | 'resources'>('qr');
+  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'admin' | 'codeVerification'>('qr');
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [currentUser, setCurrentUser] = useState<string>('');
+  const [isReturningUser, setIsReturningUser] = useState(false);
 
   useEffect(() => {
     // Check if user came via QR code scan
@@ -25,16 +28,56 @@ const Index = () => {
     if (urlParams.get('join') === 'true') {
       setCurrentScreen('welcome');
     }
+    if (urlParams.get('admin') === 'true') {
+      setCurrentScreen('admin');
+    }
   }, []);
 
+  const generateAccessCode = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
   const addAttendee = (name: string) => {
+    const accessCode = generateAccessCode();
     const newAttendee: Attendee = {
       id: Date.now().toString(),
       name,
       registeredAt: new Date(),
+      accessCode,
     };
     setAttendees([...attendees, newAttendee]);
     setCurrentUser(name);
+    
+    // Show the access code to the user (in a real app, this would be done differently)
+    alert(`Welcome ${name}! Your access code is: ${accessCode}. Please save this code for future access.`);
+  };
+
+  const checkExistingUser = (name: string) => {
+    return attendees.find(attendee => 
+      attendee.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+  };
+
+  const verifyAccessCode = (code: string) => {
+    const user = attendees.find(attendee => attendee.accessCode === code);
+    if (user) {
+      setCurrentUser(user.name);
+      setCurrentScreen('program');
+      return true;
+    }
+    return false;
+  };
+
+  const handleRegistration = (name: string) => {
+    const existingUser = checkExistingUser(name);
+    
+    if (existingUser) {
+      setIsReturningUser(true);
+      setCurrentScreen('codeVerification');
+    } else {
+      addAttendee(name);
+      setCurrentScreen('program');
+    }
   };
 
   return (
@@ -45,7 +88,7 @@ const Index = () => {
         {currentScreen === 'qr' && (
           <QRCodeScreen 
             attendeeCount={attendees.length}
-            onViewAttendees={() => setCurrentScreen('attendees')}
+            onViewAdmin={() => setCurrentScreen('admin')}
           />
         )}
         
@@ -55,10 +98,14 @@ const Index = () => {
         
         {currentScreen === 'registration' && (
           <RegistrationScreen 
-            onRegister={(name) => {
-              addAttendee(name);
-              setCurrentScreen('program');
-            }}
+            onRegister={handleRegistration}
+          />
+        )}
+        
+        {currentScreen === 'codeVerification' && (
+          <CodeVerificationScreen
+            onVerify={verifyAccessCode}
+            onBack={() => setCurrentScreen('qr')}
           />
         )}
         
@@ -68,18 +115,18 @@ const Index = () => {
             onViewResources={() => setCurrentScreen('resources')}
           />
         )}
-        
-        {currentScreen === 'attendees' && (
-          <AttendeeListScreen 
-            attendees={attendees}
-            onBack={() => setCurrentScreen('qr')}
-          />
-        )}
 
         {currentScreen === 'resources' && (
           <ResourcesScreen 
             userName={currentUser}
             onBack={() => setCurrentScreen('program')}
+          />
+        )}
+
+        {currentScreen === 'admin' && (
+          <AdminDashboard
+            attendees={attendees}
+            onBack={() => setCurrentScreen('qr')}
           />
         )}
       </div>
