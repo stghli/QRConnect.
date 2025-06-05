@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Shield, Users, Eye } from 'lucide-react';
+import { Shield, Users, Eye, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import QRCode from 'qrcode';
 
@@ -11,10 +11,10 @@ interface QRCodeScreenProps {
 
 const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAttendees }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const qrUrl = `${window.location.origin}?join=true`;
 
   useEffect(() => {
     if (canvasRef.current) {
-      const qrUrl = `${window.location.origin}?join=true`;
       QRCode.toCanvas(canvasRef.current, qrUrl, {
         width: 280,
         margin: 2,
@@ -24,7 +24,7 @@ const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAttend
         }
       });
     }
-  }, []);
+  }, [qrUrl]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -46,6 +46,18 @@ const QRCodeScreen: React.FC<QRCodeScreenProps> = ({ attendeeCount, onViewAttend
           <p className="text-sm text-blue-200 opacity-90">
             Scan to join our cybersecurity workshop
           </p>
+          
+          {/* Fallback Link */}
+          <div className="bg-blue-600/20 rounded-xl p-4 backdrop-blur-sm border border-blue-300/20">
+            <p className="text-blue-200 text-sm mb-2">QR code not working?</p>
+            <a 
+              href={qrUrl}
+              className="inline-flex items-center text-blue-300 hover:text-white transition-colors text-sm underline"
+            >
+              <Link className="w-4 h-4 mr-1" />
+              Click here to join
+            </a>
+          </div>
           
           {/* Attendance Counter */}
           <div className="bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl p-4 backdrop-blur-sm border border-blue-300/20">
