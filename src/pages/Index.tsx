@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shield } from 'lucide-react';
 import QRCodeScreen from '../components/QRCodeScreen';
@@ -10,6 +9,7 @@ import ResourcesScreen from '../components/ResourcesScreen';
 import AdminLoginScreen from '../components/AdminLoginScreen';
 import AdminDashboard from '../components/AdminDashboard';
 import CodeVerificationScreen from '../components/CodeVerificationScreen';
+import CheckedInScreen from '../components/CheckedInScreen';
 
 export interface Attendee {
   id: string;
@@ -25,7 +25,7 @@ interface ScheduleItem {
 }
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification'>('qr');
+  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification' | 'checkedIn'>('qr');
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [currentUser, setCurrentUser] = useState<string>('');
   const [isReturningUser, setIsReturningUser] = useState(false);
@@ -100,7 +100,7 @@ const Index = () => {
     const user = attendees.find(attendee => attendee.accessCode === code);
     if (user) {
       setCurrentUser(user.name);
-      setCurrentScreen('program');
+      setCurrentScreen('checkedIn');
       return true;
     }
     return false;
@@ -114,7 +114,7 @@ const Index = () => {
       setCurrentScreen('codeVerification');
     } else {
       addAttendee(name);
-      setCurrentScreen('program');
+      setCurrentScreen('checkedIn');
     }
   };
 
@@ -131,6 +131,10 @@ const Index = () => {
 
   const handleScheduleUpdate = (newSchedule: ScheduleItem[]) => {
     setSchedule(newSchedule);
+  };
+
+  const getCurrentUser = () => {
+    return attendees.find(attendee => attendee.name === currentUser);
   };
 
   return (
@@ -175,6 +179,15 @@ const Index = () => {
           <CodeVerificationScreen
             onVerify={verifyAccessCode}
             onBack={() => setCurrentScreen('qr')}
+          />
+        )}
+        
+        {currentScreen === 'checkedIn' && (
+          <CheckedInScreen
+            userName={currentUser}
+            accessCode={getCurrentUser()?.accessCode || ''}
+            onViewProgram={() => setCurrentScreen('program')}
+            onViewResources={() => setCurrentScreen('resources')}
           />
         )}
         
