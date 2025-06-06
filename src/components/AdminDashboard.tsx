@@ -1,10 +1,14 @@
 
 import React, { useState } from 'react';
-import { Shield, Users, FileText, Settings, ArrowLeft } from 'lucide-react';
+import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
 import AdminResourcesList from './admin/AdminResourcesList';
+import AdminAnalytics from './admin/AdminAnalytics';
+import AdminScheduleManager from './admin/AdminScheduleManager';
+import AdminNotifications from './admin/AdminNotifications';
+import AdminSettings from './admin/AdminSettings';
 
 interface Attendee {
   id: string;
@@ -13,13 +17,57 @@ interface Attendee {
   accessCode: string;
 }
 
+interface ScheduleItem {
+  time: string;
+  title: string;
+  description: string;
+}
+
 interface AdminDashboardProps {
   attendees: Attendee[];
+  schedule: ScheduleItem[];
+  onScheduleUpdate: (newSchedule: ScheduleItem[]) => void;
   onBack: () => void;
 }
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ attendees, onBack }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'resources'>('overview');
+const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
+  attendees, 
+  schedule, 
+  onScheduleUpdate, 
+  onBack 
+}) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings'>('overview');
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: Shield, component: AdminOverview },
+    { id: 'attendees', label: 'Attendees', icon: Users, component: AdminAttendeesList, count: attendees.length },
+    { id: 'resources', label: 'Resources', icon: FileText, component: AdminResourcesList },
+    { id: 'analytics', label: 'Analytics', icon: BarChart, component: AdminAnalytics },
+    { id: 'schedule', label: 'Schedule', icon: Calendar, component: AdminScheduleManager },
+    { id: 'notifications', label: 'Notifications', icon: Bell, component: AdminNotifications },
+    { id: 'settings', label: 'Settings', icon: Settings, component: AdminSettings }
+  ];
+
+  const renderActiveComponent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return <AdminOverview attendees={attendees} />;
+      case 'attendees':
+        return <AdminAttendeesList attendees={attendees} />;
+      case 'resources':
+        return <AdminResourcesList />;
+      case 'analytics':
+        return <AdminAnalytics attendees={attendees} />;
+      case 'schedule':
+        return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
+      case 'notifications':
+        return <AdminNotifications attendees={attendees} />;
+      case 'settings':
+        return <AdminSettings />;
+      default:
+        return <AdminOverview attendees={attendees} />;
+    }
+  };
 
   return (
     <div className="min-h-screen p-4 md:p-6">
@@ -41,43 +89,34 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ attendees, onBack }) =>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex space-x-4 mb-8">
-            <Button
-              onClick={() => setActiveTab('overview')}
-              className={`${activeTab === 'overview' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white/10 text-blue-300 hover:bg-white/20'
-              }`}
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Overview
-            </Button>
-            <Button
-              onClick={() => setActiveTab('attendees')}
-              className={`${activeTab === 'attendees' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white/10 text-blue-300 hover:bg-white/20'
-              }`}
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Attendees ({attendees.length})
-            </Button>
-            <Button
-              onClick={() => setActiveTab('resources')}
-              className={`${activeTab === 'resources' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white/10 text-blue-300 hover:bg-white/20'
-              }`}
-            >
-              <FileText className="w-4 h-4 mr-2" />
-              Resources
-            </Button>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <Button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`${activeTab === tab.id 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-white/10 text-blue-300 hover:bg-white/20'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 mr-2" />
+                  {tab.label}
+                  {tab.count && (
+                    <span className="ml-1 bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded-full text-xs">
+                      {tab.count}
+                    </span>
+                  )}
+                </Button>
+              );
+            })}
           </div>
 
           {/* Content */}
-          {activeTab === 'overview' && <AdminOverview attendees={attendees} />}
-          {activeTab === 'attendees' && <AdminAttendeesList attendees={attendees} />}
-          {activeTab === 'resources' && <AdminResourcesList />}
+          <div className="min-h-[500px]">
+            {renderActiveComponent()}
+          </div>
         </div>
       </div>
     </div>

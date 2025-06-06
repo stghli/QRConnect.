@@ -8,6 +8,7 @@ import ProgramOutlineScreen from '../components/ProgramOutlineScreen';
 import EditableProgramOutline from '../components/EditableProgramOutline';
 import ResourcesScreen from '../components/ResourcesScreen';
 import AdminLoginScreen from '../components/AdminLoginScreen';
+import AdminDashboard from '../components/AdminDashboard';
 import CodeVerificationScreen from '../components/CodeVerificationScreen';
 
 export interface Attendee {
@@ -24,7 +25,7 @@ interface ScheduleItem {
 }
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'codeVerification'>('qr');
+  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification'>('qr');
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [currentUser, setCurrentUser] = useState<string>('');
   const [isReturningUser, setIsReturningUser] = useState(false);
@@ -122,7 +123,7 @@ const Index = () => {
     if (username === 'admin' && password === 'admin123') {
       setIsAdmin(true);
       setCurrentUser('Administrator');
-      setCurrentScreen('program');
+      setCurrentScreen('adminDashboard');
       return true;
     }
     return false;
@@ -147,6 +148,15 @@ const Index = () => {
         {currentScreen === 'adminLogin' && (
           <AdminLoginScreen
             onLogin={handleAdminLogin}
+            onBack={() => setCurrentScreen('qr')}
+          />
+        )}
+
+        {currentScreen === 'adminDashboard' && (
+          <AdminDashboard
+            attendees={attendees}
+            schedule={schedule}
+            onScheduleUpdate={handleScheduleUpdate}
             onBack={() => setCurrentScreen('qr')}
           />
         )}
