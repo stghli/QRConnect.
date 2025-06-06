@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell } from 'lucide-react';
+import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
@@ -9,6 +9,7 @@ import AdminAnalytics from './admin/AdminAnalytics';
 import AdminScheduleManager from './admin/AdminScheduleManager';
 import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
+import AdminUserManagement from './admin/AdminUserManagement';
 
 interface Attendee {
   id: string;
@@ -28,19 +29,26 @@ interface AdminDashboardProps {
   schedule: ScheduleItem[];
   onScheduleUpdate: (newSchedule: ScheduleItem[]) => void;
   onBack: () => void;
+  onAddAttendee: (name: string) => void;
+  onRemoveAttendee: (id: string) => void;
+  onRegenerateCode: (id: string) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   attendees, 
   schedule, 
   onScheduleUpdate, 
-  onBack 
+  onBack,
+  onAddAttendee,
+  onRemoveAttendee,
+  onRegenerateCode
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings'>('overview');
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Shield, component: AdminOverview },
     { id: 'attendees', label: 'Attendees', icon: Users, component: AdminAttendeesList, count: attendees.length },
+    { id: 'userManagement', label: 'User Management', icon: UserCog, component: AdminUserManagement },
     { id: 'resources', label: 'Resources', icon: FileText, component: AdminResourcesList },
     { id: 'analytics', label: 'Analytics', icon: BarChart, component: AdminAnalytics },
     { id: 'schedule', label: 'Schedule', icon: Calendar, component: AdminScheduleManager },
@@ -54,6 +62,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         return <AdminOverview attendees={attendees} />;
       case 'attendees':
         return <AdminAttendeesList attendees={attendees} />;
+      case 'userManagement':
+        return <AdminUserManagement 
+          attendees={attendees} 
+          onAddAttendee={onAddAttendee}
+          onRemoveAttendee={onRemoveAttendee}
+          onRegenerateCode={onRegenerateCode}
+        />;
       case 'resources':
         return <AdminResourcesList />;
       case 'analytics':
