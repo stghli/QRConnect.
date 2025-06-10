@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				elegant: {
+					primary: 'hsl(var(--elegant-primary))',
+					secondary: 'hsl(var(--elegant-secondary))',
+					accent: 'hsl(var(--elegant-accent))',
+					surface: 'hsl(var(--elegant-surface))',
+					'surface-light': 'hsl(var(--elegant-surface-light))'
 				}
 			},
 			borderRadius: {
@@ -84,11 +92,34 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+					'50%': { transform: 'translateY(-20px) rotate(5deg)' }
+				},
+				'pulse-glow': {
+					'0%, 100%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)' },
+					'50%': { boxShadow: '0 0 40px rgba(139, 92, 246, 0.8)' }
+				},
+				'drift': {
+					'0%': { transform: 'translate(0px, 0px) rotate(0deg)' },
+					'33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
+					'66%': { transform: 'translate(-20px, 20px) rotate(240deg)' },
+					'100%': { transform: 'translate(0px, 0px) rotate(360deg)' }
+				},
+				'data-flow': {
+					'0%': { transform: 'translateX(-100%)', opacity: '0' },
+					'50%': { opacity: '1' },
+					'100%': { transform: 'translateX(100%)', opacity: '0' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+				'drift': 'drift 20s linear infinite',
+				'data-flow': 'data-flow 4s linear infinite'
 			}
 		}
 	},

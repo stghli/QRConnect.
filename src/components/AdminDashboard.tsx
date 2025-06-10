@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,7 @@ import AdminScheduleManager from './admin/AdminScheduleManager';
 import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
 import AdminUserManagement from './admin/AdminUserManagement';
+import AnimatedBackground from './AnimatedBackground';
 
 interface Attendee {
   id: string;
@@ -85,18 +85,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-6">
-      <div className="max-w-7xl mx-auto backdrop-blur-lg bg-white/10 rounded-3xl border border-white/20 shadow-2xl">
+    <div className="min-h-screen p-4 md:p-6 relative">
+      <AnimatedBackground />
+      <div className="max-w-7xl mx-auto elegant-card rounded-3xl shadow-2xl relative z-10">
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-3">
-              <Shield className="w-8 h-8 text-blue-300" />
-              <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+              <Shield className="w-8 h-8 text-elegant-primary computer-pulse" />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-elegant-primary to-elegant-secondary bg-clip-text text-transparent">
+                Admin Dashboard
+              </h1>
             </div>
             <Button
               onClick={onBack}
-              className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-300/20"
+              className="elegant-button text-white border-0"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to QR Code
@@ -112,14 +115,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`${activeTab === tab.id 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-white/10 text-blue-300 hover:bg-white/20'
+                    ? 'elegant-button text-white border-0' 
+                    : 'bg-elegant-surface-light/50 text-elegant-primary hover:bg-elegant-surface-light border border-elegant-primary/20'
                   }`}
                 >
                   <Icon className="w-4 h-4 mr-2" />
                   {tab.label}
                   {tab.count && (
-                    <span className="ml-1 bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded-full text-xs">
+                    <span className="ml-1 bg-elegant-accent/30 text-elegant-accent px-2 py-0.5 rounded-full text-xs">
                       {tab.count}
                     </span>
                   )}

@@ -77,13 +77,13 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
   return (
     <div className="space-y-6">
       {/* Add New Attendee */}
-      <Card className="bg-blue-900/30 border-blue-700/40">
+      <Card className="elegant-card">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <UserPlus className="w-5 h-5 mr-2" />
+          <CardTitle className="text-foreground flex items-center">
+            <UserPlus className="w-5 h-5 mr-2 text-elegant-primary" />
             Add New Attendee
           </CardTitle>
-          <CardDescription className="text-blue-200">
+          <CardDescription className="text-muted-foreground">
             Manually register a new workshop attendee
           </CardDescription>
         </CardHeader>
@@ -98,13 +98,13 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
                   setNewAttendeeName(e.target.value);
                   if (error) setError('');
                 }}
-                className="bg-white/10 border-blue-300/30 text-white placeholder-blue-300/70"
+                className="bg-elegant-surface-light/50 border-elegant-primary/30 text-foreground placeholder:text-muted-foreground"
               />
-              {error && <p className="text-red-300 text-sm mt-1">{error}</p>}
+              {error && <p className="text-destructive text-sm mt-1">{error}</p>}
             </div>
             <Button 
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="elegant-button text-white border-0"
             >
               <UserPlus className="w-4 h-4 mr-2" />
               Add Attendee
@@ -114,40 +114,40 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
       </Card>
 
       {/* Attendees Management */}
-      <Card className="bg-blue-900/30 border-blue-700/40">
+      <Card className="elegant-card">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <Users className="w-5 h-5 mr-2" />
+          <CardTitle className="text-foreground flex items-center">
+            <Users className="w-5 h-5 mr-2 text-elegant-primary" />
             Attendee Management
           </CardTitle>
-          <CardDescription className="text-blue-200">
+          <CardDescription className="text-muted-foreground">
             Manage registered attendees and their access codes
           </CardDescription>
         </CardHeader>
         <CardContent>
           {attendees.length === 0 ? (
             <div className="text-center py-8">
-              <Users className="w-12 h-12 text-blue-300/50 mx-auto mb-4" />
-              <p className="text-blue-200">No attendees registered yet</p>
+              <Users className="w-12 h-12 text-elegant-primary/50 mx-auto mb-4" />
+              <p className="text-muted-foreground">No attendees registered yet</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-blue-700/40">
-                  <TableHead className="text-blue-300">Name</TableHead>
-                  <TableHead className="text-blue-300">Registration Time</TableHead>
-                  <TableHead className="text-blue-300">Access Code</TableHead>
-                  <TableHead className="text-blue-300">Actions</TableHead>
+                <TableRow className="border-elegant-primary/20">
+                  <TableHead className="text-elegant-primary">Name</TableHead>
+                  <TableHead className="text-elegant-primary">Registration Time</TableHead>
+                  <TableHead className="text-elegant-primary">Access Code</TableHead>
+                  <TableHead className="text-elegant-primary">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {attendees.map((attendee) => (
-                  <TableRow key={attendee.id} className="border-blue-700/40">
-                    <TableCell className="text-white font-medium">{attendee.name}</TableCell>
-                    <TableCell className="text-blue-200">
+                  <TableRow key={attendee.id} className="border-elegant-primary/20">
+                    <TableCell className="text-foreground font-medium">{attendee.name}</TableCell>
+                    <TableCell className="text-muted-foreground">
                       {attendee.registeredAt.toLocaleDateString()} {attendee.registeredAt.toLocaleTimeString()}
                     </TableCell>
-                    <TableCell className="text-blue-300 font-mono">
+                    <TableCell className="text-elegant-accent font-mono">
                       <div className="flex items-center space-x-2">
                         <span>
                           {visibleCodes.has(attendee.id) ? attendee.accessCode : '••••••'}
@@ -155,7 +155,7 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
                         <Button
                           size="sm"
                           onClick={() => toggleCodeVisibility(attendee.id)}
-                          className="bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 p-1 h-6 w-6"
+                          className="bg-elegant-primary/20 hover:bg-elegant-primary/30 text-elegant-primary p-1 h-6 w-6"
                         >
                           {visibleCodes.has(attendee.id) ? 
                             <EyeOff className="w-3 h-3" /> : 
@@ -165,7 +165,7 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
                         <Button
                           size="sm"
                           onClick={() => copyToClipboard(attendee.accessCode, attendee.id)}
-                          className="bg-green-600/30 hover:bg-green-600/50 text-green-300 p-1 h-6 w-6"
+                          className="bg-elegant-accent/20 hover:bg-elegant-accent/30 text-elegant-accent p-1 h-6 w-6"
                         >
                           {copiedCode === attendee.id ? 
                             <UserCheck className="w-3 h-3" /> : 
@@ -179,14 +179,14 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
                         <Button
                           size="sm"
                           onClick={() => onRegenerateCode(attendee.id)}
-                          className="bg-yellow-600/30 hover:bg-yellow-600/50 text-yellow-300"
+                          className="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
                         >
                           Regenerate Code
                         </Button>
                         <Button
                           size="sm"
                           onClick={() => onRemoveAttendee(attendee.id)}
-                          className="bg-red-600/30 hover:bg-red-600/50 text-red-300"
+                          className="bg-destructive/20 hover:bg-destructive/30 text-destructive"
                         >
                           <Trash2 className="w-3 h-3" />
                         </Button>
