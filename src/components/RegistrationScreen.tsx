@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Shield, User, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface RegistrationScreenProps {
   onRegister: (name: string) => void;
@@ -31,23 +32,22 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegister }) =
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="backdrop-blur-lg bg-white/10 rounded-3xl p-8 max-w-md w-full border border-white/20 shadow-2xl animate-fade-in">
-        <div className="text-center space-y-6">
-          {/* Header */}
+      <Card className="max-w-md w-full animate-fade-in">
+        <CardHeader className="text-center space-y-4">
           <div className="flex items-center justify-center space-x-3">
-            <Shield className="w-8 h-8 text-blue-300" />
-            <h1 className="text-3xl font-bold text-white">Join Workshop</h1>
+            <Shield className="w-8 h-8 text-elegant-primary animate-pulse" />
+            <CardTitle>Join Workshop</CardTitle>
           </div>
-          
-          <p className="text-blue-200">
+          <CardDescription>
             Register for CyberSec Workshop 2025 and begin your journey to becoming a digital guardian.
-          </p>
-          
-          {/* Registration Form */}
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-elegant-primary" />
                 <Input
                   type="text"
                   placeholder="Enter your full name"
@@ -56,29 +56,29 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegister }) =
                     setName(e.target.value);
                     if (error) setError('');
                   }}
-                  className="pl-10 bg-white/10 border-blue-300/30 text-white placeholder-blue-300/70 focus:border-blue-400 focus:ring-blue-400/30 rounded-xl h-12"
+                  className="pl-10 bg-elegant-surface-light/30 border-elegant-primary/30 text-foreground placeholder:text-muted-foreground focus:border-elegant-primary focus:ring-elegant-primary/30 rounded-xl h-12"
                 />
               </div>
               
               {error && (
-                <p className="text-red-300 text-sm text-left">{error}</p>
+                <p className="text-destructive text-sm">{error}</p>
               )}
             </div>
             
             <Button 
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              className="w-full elegant-button text-white font-semibold py-3 rounded-xl"
             >
               Register Now
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
           
-          <p className="text-xs text-blue-300/70">
+          <p className="text-xs text-muted-foreground text-center mt-4">
             By registering, you agree to participate in our cybersecurity workshop
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

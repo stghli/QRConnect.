@@ -43,25 +43,28 @@ const AdminResourcesList: React.FC = () => {
   return (
     <div className="space-y-6">
       {resources.map((category, categoryIndex) => (
-        <Card key={categoryIndex} className="bg-blue-900/30 border-blue-700/40">
+        <Card key={categoryIndex}>
           <CardHeader>
-            <CardTitle className="text-white">{category.category}</CardTitle>
+            <CardTitle className="flex items-center">
+              <FileText className="w-5 h-5 mr-2 text-elegant-primary" />
+              {category.category}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {category.items.map((item, itemIndex) => (
-                <div key={itemIndex} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div key={itemIndex} className="flex items-center justify-between p-3 elegant-card border border-elegant-primary/20 rounded-lg hover:border-elegant-primary/40 transition-colors">
                   <div className="flex items-center space-x-3">
-                    <FileText className="w-5 h-5 text-blue-300" />
+                    <FileText className="w-5 h-5 text-elegant-accent" />
                     <div>
-                      <p className="text-white font-medium">{item.name}</p>
-                      <p className="text-blue-200 text-sm">{item.type} • {item.size}</p>
+                      <p className="text-foreground font-medium">{item.name}</p>
+                      <p className="text-muted-foreground text-sm">{item.type} • {item.size}</p>
                     </div>
                   </div>
                   <Button
                     size="sm"
                     onClick={() => handleDownload(item.name)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-elegant-primary hover:bg-elegant-secondary text-white"
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download

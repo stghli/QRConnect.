@@ -18,36 +18,39 @@ interface AdminAttendeesListProps {
 const AdminAttendeesList: React.FC<AdminAttendeesListProps> = ({ attendees }) => {
   return (
     <div>
-      <Card className="bg-blue-900/30 border-blue-700/40">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-white">Registered Attendees</CardTitle>
-          <CardDescription className="text-blue-200">
+          <CardTitle className="flex items-center">
+            <Users className="w-5 h-5 mr-2 text-elegant-primary" />
+            Registered Attendees
+          </CardTitle>
+          <CardDescription>
             {attendees.length} people registered for the workshop
           </CardDescription>
         </CardHeader>
         <CardContent>
           {attendees.length === 0 ? (
             <div className="text-center py-8">
-              <Users className="w-12 h-12 text-blue-300/50 mx-auto mb-4" />
-              <p className="text-blue-200">No attendees registered yet</p>
+              <Users className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+              <p className="text-muted-foreground">No attendees registered yet</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-blue-700/40">
-                  <TableHead className="text-blue-300">Name</TableHead>
-                  <TableHead className="text-blue-300">Registration Time</TableHead>
-                  <TableHead className="text-blue-300">Access Code</TableHead>
+                <TableRow>
+                  <TableHead className="text-elegant-primary">Name</TableHead>
+                  <TableHead className="text-elegant-primary">Registration Time</TableHead>
+                  <TableHead className="text-elegant-primary">Access Code</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {attendees.map((attendee) => (
-                  <TableRow key={attendee.id} className="border-blue-700/40">
-                    <TableCell className="text-white font-medium">{attendee.name}</TableCell>
-                    <TableCell className="text-blue-200">
+                  <TableRow key={attendee.id}>
+                    <TableCell className="text-foreground font-medium">{attendee.name}</TableCell>
+                    <TableCell className="text-muted-foreground">
                       {attendee.registeredAt.toLocaleDateString()} {attendee.registeredAt.toLocaleTimeString()}
                     </TableCell>
-                    <TableCell className="text-blue-300 font-mono">
+                    <TableCell className="text-elegant-accent font-mono">
                       {attendee.id.slice(-6).toUpperCase()}
                     </TableCell>
                   </TableRow>
