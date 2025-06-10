@@ -16,7 +16,7 @@ const AnimatedBackground: React.FC = () => {
         return (
           <div
             key={index}
-            className="absolute opacity-10"
+            className="absolute opacity-20 computer-drift"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -25,10 +25,7 @@ const AnimatedBackground: React.FC = () => {
             }}
           >
             <Icon 
-              className="w-8 h-8 text-elegant-primary computer-drift" 
-              style={{
-                filter: 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.3))'
-              }}
+              className="w-8 h-8 text-elegant-primary computer-pulse" 
             />
           </div>
         );
@@ -39,14 +36,19 @@ const AnimatedBackground: React.FC = () => {
         {Array.from({ length: 6 }).map((_, index) => (
           <div
             key={`line-${index}`}
-            className="absolute h-px bg-gradient-to-r from-transparent via-elegant-primary to-transparent opacity-20"
+            className="absolute h-px bg-gradient-to-r from-transparent via-elegant-primary to-transparent opacity-30"
             style={{
               top: `${20 + index * 15}%`,
               width: '100%',
               animationDelay: `${index * 1.2}s`
             }}
           >
-            <div className="h-full w-20 bg-elegant-accent data-stream"></div>
+            <div 
+              className="h-full w-20 bg-elegant-accent data-stream"
+              style={{
+                animationDelay: `${index * 0.8}s`
+              }}
+            ></div>
           </div>
         ))}
       </div>
@@ -56,16 +58,14 @@ const AnimatedBackground: React.FC = () => {
         {Array.from({ length: 20 }).map((_, index) => (
           <div
             key={`particle-${index}`}
-            className="absolute w-1 h-1 bg-elegant-accent rounded-full opacity-30"
+            className="absolute w-2 h-2 bg-elegant-accent rounded-full particle-float"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${index * 0.3}s`,
               animationDuration: `${8 + (index % 4)}s`
             }}
-          >
-            <div className="w-full h-full computer-float"></div>
-          </div>
+          />
         ))}
       </div>
       
