@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Shield, Download, ArrowLeft, FileText, FolderOpen, Book, Wrench } from 'lucide-react';
+import { Shield, Download, ArrowLeft, FileText, FolderOpen, Book, Wrench, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,6 +23,17 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) =
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleView = (filename: string) => {
+    // In a real app, this would open the file in a new tab or modal
+    console.log(`Viewing ${filename}`);
+    // Simulate viewing with a blob URL for demonstration
+    const blob = new Blob([`Sample content for ${filename}`], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    // Clean up the URL after a delay to allow the browser to load it
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const cheatsheets = [
@@ -130,14 +140,25 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) =
           <div className="text-xs text-blue-300/70 font-medium">
             {item.size}
           </div>
-          <Button 
-            onClick={() => handleDownload(item.filename)}
-            size="sm"
-            className="bg-blue-600/80 hover:bg-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Download
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => handleView(item.filename)}
+              size="sm"
+              variant="outline"
+              className="bg-transparent border-blue-500/50 text-blue-200 hover:bg-blue-600/20 hover:border-blue-400 transition-all duration-300"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View
+            </Button>
+            <Button 
+              onClick={() => handleDownload(item.filename)}
+              size="sm"
+              className="bg-blue-600/80 hover:bg-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -179,27 +200,27 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) =
 
         {/* Tabs Section */}
         <Tabs defaultValue="cheatsheets" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-1 mb-8">
+          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2 mb-8 gap-1">
             <TabsTrigger 
               value="cheatsheets" 
-              className="data-[state=active]:bg-blue-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
+              className="data-[state=active]:bg-blue-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-4 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
             >
-              <FolderOpen className="w-4 h-4 mr-2" />
-              Quick Reference
+              <FolderOpen className="w-4 h-4 mr-1.5 flex-shrink-0" />
+              <span className="truncate">Quick Reference</span>
             </TabsTrigger>
             <TabsTrigger 
               value="toolkits" 
-              className="data-[state=active]:bg-purple-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
+              className="data-[state=active]:bg-purple-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-4 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
             >
-              <Wrench className="w-4 h-4 mr-2" />
-              Tools & Kits
+              <Wrench className="w-4 h-4 mr-1.5 flex-shrink-0" />
+              <span className="truncate">Tools & Kits</span>
             </TabsTrigger>
             <TabsTrigger 
               value="slides" 
-              className="data-[state=active]:bg-indigo-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
+              className="data-[state=active]:bg-indigo-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-4 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
             >
-              <Book className="w-4 h-4 mr-2" />
-              Presentations
+              <Book className="w-4 h-4 mr-1.5 flex-shrink-0" />
+              <span className="truncate">Presentations</span>
             </TabsTrigger>
           </TabsList>
 
