@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Shield, ArrowLeft, Users, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Attendee } from '../pages/Index';
+import { Attendee } from '../types';
 
 interface AttendeeListScreenProps {
   attendees: Attendee[];
