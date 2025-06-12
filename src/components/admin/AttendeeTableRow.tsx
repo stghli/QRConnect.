@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { UserCheck, Trash2, Copy, Eye, EyeOff } from 'lucide-react';
+import { UserCheck, Trash2, Copy, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 
@@ -24,6 +24,7 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
 }) => {
   const [isCodeVisible, setIsCodeVisible] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const toggleCodeVisibility = () => {
     setIsCodeVisible(!isCodeVisible);
@@ -37,6 +38,12 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
+  };
+
+  const handleRegenerateCode = () => {
+    setIsRegenerating(true);
+    onRegenerateCode(attendee.id);
+    setTimeout(() => setIsRegenerating(false), 1000);
   };
 
   return (
@@ -76,10 +83,12 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
         <div className="flex space-x-2">
           <Button
             size="sm"
-            onClick={() => onRegenerateCode(attendee.id)}
-            className="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
+            onClick={handleRegenerateCode}
+            disabled={isRegenerating}
+            className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/20"
           >
-            Regenerate Code
+            <RefreshCw className={`w-3 h-3 mr-1 ${isRegenerating ? 'animate-spin' : ''}`} />
+            {isRegenerating ? 'Resetting...' : 'Reset Code'}
           </Button>
           <Button
             size="sm"
