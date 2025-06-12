@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Shield } from 'lucide-react';
+
+import React, { useEffect } from 'react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import QRCodeScreen from '../components/QRCodeScreen';
 import WelcomeScreen from '../components/WelcomeScreen';
@@ -11,58 +11,33 @@ import AdminLoginScreen from '../components/AdminLoginScreen';
 import AdminDashboard from '../components/AdminDashboard';
 import CodeVerificationScreen from '../components/CodeVerificationScreen';
 import CheckedInScreen from '../components/CheckedInScreen';
-
-export interface Attendee {
-  id: string;
-  name: string;
-  registeredAt: Date;
-  accessCode: string;
-}
-
-interface ScheduleItem {
-  time: string;
-  title: string;
-  description: string;
-}
+import { useUserSession } from '../hooks/useUserSession';
+import { useAttendeeManagement } from '../hooks/useAttendeeManagement';
+import { useScheduleManagement } from '../hooks/useScheduleManagement';
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState<'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification' | 'checkedIn'>('qr');
-  const [attendees, setAttendees] = useState<Attendee[]>([]);
-  const [currentUser, setCurrentUser] = useState<string>('');
-  const [isReturningUser, setIsReturningUser] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [schedule, setSchedule] = useState<ScheduleItem[]>([
-    {
-      time: '9:00 AM',
-      title: 'Introduction & Welcome',
-      description: 'Overview of the workshop and introductions'
-    },
-    {
-      time: '10:30 AM',
-      title: 'Threat Landscape',
-      description: 'Current cyber threats and attack vectors'
-    },
-    {
-      time: '12:00 PM',
-      title: 'Lunch Break',
-      description: 'Networking with peers and speakers'
-    },
-    {
-      time: '1:30 PM',
-      title: 'Hands-on Lab',
-      description: 'Practical cybersecurity exercises'
-    },
-    {
-      time: '3:30 PM',
-      title: 'Panel Discussion',
-      description: 'Q&A with industry experts'
-    },
-    {
-      time: '4:30 PM',
-      title: 'Closing Remarks',
-      description: 'Workshop summary and next steps'
-    }
-  ]);
+  const {
+    currentUser,
+    setCurrentUser,
+    isReturningUser,
+    setIsReturningUser,
+    isAdmin,
+    currentScreen,
+    setCurrentScreen,
+    handleAdminLogin,
+  } = useUserSession();
+
+  const {
+    attendees,
+    addAttendee,
+    checkExistingUser,
+    verifyAccessCode,
+    handleRemoveAttendee,
+    handleRegenerateCode,
+    getCurrentUser,
+  } = useAttendeeManagement();
+
+  const { schedule, handleScheduleUpdate } = useScheduleManagement();
 
   useEffect(() => {
     // Check if user came via QR code scan
@@ -70,43 +45,7 @@ const Index = () => {
     if (urlParams.get('join') === 'true') {
       setCurrentScreen('welcome');
     }
-  }, []);
-
-  const generateAccessCode = () => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  };
-
-  const addAttendee = (name: string) => {
-    const accessCode = generateAccessCode();
-    const newAttendee: Attendee = {
-      id: Date.now().toString(),
-      name,
-      registeredAt: new Date(),
-      accessCode,
-    };
-    setAttendees([...attendees, newAttendee]);
-    setCurrentUser(name);
-    
-    // Show the access code to the user (in a real app, this would be done differently)
-    alert(`Welcome ${name}! Your access code is: ${accessCode}. Please save this code for future access.`);
-    return newAttendee;
-  };
-
-  const checkExistingUser = (name: string) => {
-    return attendees.find(attendee => 
-      attendee.name.toLowerCase().trim() === name.toLowerCase().trim()
-    );
-  };
-
-  const verifyAccessCode = (code: string) => {
-    const user = attendees.find(attendee => attendee.accessCode === code);
-    if (user) {
-      setCurrentUser(user.name);
-      setCurrentScreen('checkedIn');
-      return true;
-    }
-    return false;
-  };
+  }, [setCurrentScreen]);
 
   const handleRegistration = (name: string) => {
     const existingUser = checkExistingUser(name);
@@ -116,27 +55,19 @@ const Index = () => {
       setCurrentScreen('codeVerification');
     } else {
       addAttendee(name);
+      setCurrentUser(name);
       setCurrentScreen('checkedIn');
     }
   };
 
-  const handleAdminLogin = (username: string, password: string) => {
-    // Simple demo authentication - in a real app, this would be more secure
-    if (username === 'admin' && password === 'admin123') {
-      setIsAdmin(true);
-      setCurrentUser('Administrator');
-      setCurrentScreen('adminDashboard');
+  const handleCodeVerification = (code: string): boolean => {
+    const user = verifyAccessCode(code);
+    if (user) {
+      setCurrentUser(user.name);
+      setCurrentScreen('checkedIn');
       return true;
     }
     return false;
-  };
-
-  const handleScheduleUpdate = (newSchedule: ScheduleItem[]) => {
-    setSchedule(newSchedule);
-  };
-
-  const getCurrentUser = () => {
-    return attendees.find(attendee => attendee.name === currentUser);
   };
 
   const handleQRCodeVerification = () => {
@@ -148,19 +79,6 @@ const Index = () => {
     const newAttendee = addAttendee(name);
     // Don't redirect to checked-in screen for admin additions
     return newAttendee;
-  };
-
-  const handleRemoveAttendee = (id: string) => {
-    setAttendees(attendees.filter(attendee => attendee.id !== id));
-  };
-
-  const handleRegenerateCode = (id: string) => {
-    const newCode = generateAccessCode();
-    setAttendees(attendees.map(attendee => 
-      attendee.id === id 
-        ? { ...attendee, accessCode: newCode }
-        : attendee
-    ));
   };
 
   return (
@@ -210,7 +128,7 @@ const Index = () => {
         
         {currentScreen === 'codeVerification' && (
           <CodeVerificationScreen
-            onVerify={verifyAccessCode}
+            onVerify={handleCodeVerification}
             onBack={() => setCurrentScreen('qr')}
           />
         )}
@@ -218,7 +136,7 @@ const Index = () => {
         {currentScreen === 'checkedIn' && (
           <CheckedInScreen
             userName={currentUser}
-            accessCode={getCurrentUser()?.accessCode || ''}
+            accessCode={getCurrentUser(currentUser)?.accessCode || ''}
             onViewProgram={() => setCurrentScreen('program')}
             onViewResources={() => setCurrentScreen('resources')}
           />
