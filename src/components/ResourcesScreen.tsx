@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield, Download, ArrowLeft, FileText } from 'lucide-react';
+import { Shield, Download, ArrowLeft, FileText, FolderOpen, Book, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,197 +28,229 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) =
 
   const cheatsheets = [
     {
-      title: 'Top 10 Password Tips',
-      description: 'Essential password security best practices for everyone',
-      filename: 'password-tips-cheatsheet.pdf',
-      size: '2.1 MB'
+      title: 'Password Security Best Practices',
+      description: 'Comprehensive guide to creating and managing secure passwords',
+      filename: 'password-security-guide.pdf',
+      size: '2.1 MB',
+      category: 'Security Fundamentals'
     },
     {
-      title: 'Phishing Detection Guide',
-      description: 'How to identify and avoid phishing attempts',
-      filename: 'phishing-detection-guide.pdf',
-      size: '1.8 MB'
+      title: 'Phishing Detection & Prevention',
+      description: 'Identify and avoid sophisticated phishing attempts',
+      filename: 'phishing-prevention-guide.pdf',
+      size: '1.8 MB',
+      category: 'Threat Awareness'
     },
     {
-      title: 'Social Engineering Awareness',
-      description: 'Recognize and prevent social engineering attacks',
-      filename: 'social-engineering-awareness.pdf',
-      size: '2.4 MB'
+      title: 'Social Engineering Defense',
+      description: 'Recognize and counter social engineering tactics',
+      filename: 'social-engineering-defense.pdf',
+      size: '2.4 MB',
+      category: 'Human Security'
     },
     {
-      title: 'Network Security Checklist',
-      description: 'Quick reference for securing your network',
-      filename: 'network-security-checklist.pdf',
-      size: '1.5 MB'
+      title: 'Network Security Essentials',
+      description: 'Core principles for securing network infrastructure',
+      filename: 'network-security-essentials.pdf',
+      size: '1.5 MB',
+      category: 'Infrastructure'
     }
   ];
 
   const toolkits = [
     {
-      title: 'Kali Linux Getting Started',
-      description: 'Complete guide to setting up and using Kali Linux',
-      filename: 'kali-linux-guide.pdf',
-      size: '4.2 MB'
+      title: 'Kali Linux Complete Setup Guide',
+      description: 'Step-by-step installation and configuration of Kali Linux',
+      filename: 'kali-linux-setup-guide.pdf',
+      size: '4.2 MB',
+      category: 'Penetration Testing'
     },
     {
-      title: 'Wireshark Tutorial',
-      description: 'Learn to analyze network traffic with Wireshark',
-      filename: 'wireshark-tutorial.pdf',
-      size: '3.7 MB'
+      title: 'Wireshark Network Analysis',
+      description: 'Master network traffic analysis with Wireshark',
+      filename: 'wireshark-analysis-tutorial.pdf',
+      size: '3.7 MB',
+      category: 'Network Analysis'
     },
     {
-      title: 'Penetration Testing Framework',
-      description: 'Methodology and tools for ethical hacking',
-      filename: 'penetration-testing-framework.pdf',
-      size: '5.1 MB'
+      title: 'Ethical Hacking Framework',
+      description: 'Structured approach to penetration testing',
+      filename: 'ethical-hacking-framework.pdf',
+      size: '5.1 MB',
+      category: 'Methodology'
     }
   ];
 
   const slides = [
     {
-      title: 'Workshop Day 1: Introduction',
-      description: 'Introduction to cybersecurity fundamentals',
-      filename: 'workshop-day1-slides.pdf',
-      size: '8.6 MB'
+      title: 'Cybersecurity Fundamentals',
+      description: 'Introduction to core cybersecurity concepts and principles',
+      filename: 'cybersecurity-fundamentals.pdf',
+      size: '8.6 MB',
+      category: 'Session 1'
     },
     {
-      title: 'Workshop Day 2: Threat Modeling',
-      description: 'Understanding and analyzing potential threats',
-      filename: 'workshop-day2-slides.pdf',
-      size: '7.2 MB'
+      title: 'Advanced Threat Modeling',
+      description: 'Comprehensive threat analysis and risk assessment',
+      filename: 'threat-modeling-advanced.pdf',
+      size: '7.2 MB',
+      category: 'Session 2'
     },
     {
-      title: 'Workshop Day 3: Hands-on Lab',
-      description: 'Practical exercises and demonstrations',
-      filename: 'workshop-day3-slides.pdf',
-      size: '9.1 MB'
+      title: 'Hands-on Security Lab',
+      description: 'Practical exercises and real-world scenarios',
+      filename: 'security-lab-exercises.pdf',
+      size: '9.1 MB',
+      category: 'Session 3'
     }
   ];
 
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl backdrop-blur-lg bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
+  const ResourceCard = ({ item, icon: Icon, color }: { item: any, icon: any, color: string }) => (
+    <Card className="bg-white/5 border-white/10 backdrop-blur-md hover:bg-white/10 transition-all duration-300 group">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <Shield className="w-8 h-8 text-blue-300" />
-            <h1 className="text-3xl font-bold text-white">Resources</h1>
+            <div className={`p-2 rounded-lg ${color} bg-opacity-20`}>
+              <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-')}`} />
+            </div>
+            <div className="flex-1">
+              <CardTitle className="text-white text-lg font-semibold group-hover:text-blue-200 transition-colors">
+                {item.title}
+              </CardTitle>
+              <p className="text-xs text-blue-300 font-medium mt-1">{item.category}</p>
+            </div>
+          </div>
+        </div>
+        <CardDescription className="text-blue-200/80 text-sm leading-relaxed mt-2">
+          {item.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-blue-300/70 font-medium">
+            {item.size}
+          </div>
+          <Button 
+            onClick={() => handleDownload(item.filename)}
+            size="sm"
+            className="bg-blue-600/80 hover:bg-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-blue-600/20 rounded-xl backdrop-blur-sm">
+              <Shield className="w-8 h-8 text-blue-300" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-white">Workshop Resources</h1>
+              <p className="text-blue-200/80 mt-1">Access all materials and documentation</p>
+            </div>
           </div>
           <Button 
             variant="ghost" 
-            className="text-blue-200 hover:text-white hover:bg-blue-800/50"
+            className="text-blue-200 hover:text-white hover:bg-white/10 px-6 py-3 rounded-xl"
             onClick={onBack}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            Back to Program
           </Button>
         </div>
         
+        {/* Welcome Message */}
         {userName && (
-          <p className="text-blue-200 mb-6">
-            Welcome, <span className="font-semibold">{userName}</span>! Here are all workshop resources for your reference.
-          </p>
+          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl p-6 mb-8 border border-blue-500/20 backdrop-blur-sm">
+            <p className="text-blue-100 text-lg">
+              Welcome back, <span className="font-semibold text-white">{userName}</span>! 
+              Download the resources you need for the cybersecurity workshop.
+            </p>
+          </div>
         )}
 
+        {/* Tabs Section */}
         <Tabs defaultValue="cheatsheets" className="w-full">
-          <TabsList className="w-full bg-blue-900/50 border border-blue-800 mb-6">
+          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-1 mb-8">
             <TabsTrigger 
               value="cheatsheets" 
-              className="text-blue-200 data-[state=active]:bg-blue-700/50 data-[state=active]:text-white flex-1"
+              className="data-[state=active]:bg-blue-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
             >
-              Cheatsheets
+              <FolderOpen className="w-4 h-4 mr-2" />
+              Quick Reference
             </TabsTrigger>
             <TabsTrigger 
               value="toolkits" 
-              className="text-blue-200 data-[state=active]:bg-blue-700/50 data-[state=active]:text-white flex-1"
+              className="data-[state=active]:bg-purple-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
             >
-              Toolkits
+              <Wrench className="w-4 h-4 mr-2" />
+              Tools & Kits
             </TabsTrigger>
             <TabsTrigger 
               value="slides" 
-              className="text-blue-200 data-[state=active]:bg-blue-700/50 data-[state=active]:text-white flex-1"
+              className="data-[state=active]:bg-indigo-600/50 data-[state=active]:text-white text-blue-200 rounded-lg px-6 py-3 font-medium transition-all duration-300"
             >
-              Workshop Slides
+              <Book className="w-4 h-4 mr-2" />
+              Presentations
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="cheatsheets" className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+          <TabsContent value="cheatsheets" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {cheatsheets.map((item) => (
-                <Card key={item.title} className="bg-blue-800/20 border-blue-700/50 backdrop-blur-sm hover:bg-blue-800/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-white text-xl flex items-center">
-                      <FileText className="w-5 h-5 mr-2 text-blue-300" />
-                      {item.title}
-                    </CardTitle>
-                    <CardDescription className="text-blue-200">{item.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-between items-center">
-                    <span className="text-sm text-blue-300">{item.size}</span>
-                    <Button 
-                      onClick={() => handleDownload(item.filename)}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </CardContent>
-                </Card>
+                <ResourceCard 
+                  key={item.title} 
+                  item={item} 
+                  icon={FileText} 
+                  color="bg-blue-500" 
+                />
               ))}
             </div>
           </TabsContent>
 
-          <TabsContent value="toolkits" className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+          <TabsContent value="toolkits" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {toolkits.map((item) => (
-                <Card key={item.title} className="bg-purple-800/20 border-purple-700/50 backdrop-blur-sm hover:bg-purple-800/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-white text-xl flex items-center">
-                      <FileText className="w-5 h-5 mr-2 text-purple-300" />
-                      {item.title}
-                    </CardTitle>
-                    <CardDescription className="text-blue-200">{item.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-between items-center">
-                    <span className="text-sm text-blue-300">{item.size}</span>
-                    <Button 
-                      onClick={() => handleDownload(item.filename)}
-                      className="bg-purple-600 hover:bg-purple-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </CardContent>
-                </Card>
+                <ResourceCard 
+                  key={item.title} 
+                  item={item} 
+                  icon={Wrench} 
+                  color="bg-purple-500" 
+                />
               ))}
             </div>
           </TabsContent>
 
-          <TabsContent value="slides" className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+          <TabsContent value="slides" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {slides.map((item) => (
-                <Card key={item.title} className="bg-indigo-800/20 border-indigo-700/50 backdrop-blur-sm hover:bg-indigo-800/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-white text-xl flex items-center">
-                      <FileText className="w-5 h-5 mr-2 text-indigo-300" />
-                      {item.title}
-                    </CardTitle>
-                    <CardDescription className="text-blue-200">{item.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-between items-center">
-                    <span className="text-sm text-blue-300">{item.size}</span>
-                    <Button 
-                      onClick={() => handleDownload(item.filename)}
-                      className="bg-indigo-600 hover:bg-indigo-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </CardContent>
-                </Card>
+                <ResourceCard 
+                  key={item.title} 
+                  item={item} 
+                  icon={Book} 
+                  color="bg-indigo-500" 
+                />
               ))}
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Footer */}
+        <div className="mt-12 text-center">
+          <div className="bg-white/5 rounded-2xl p-6 backdrop-blur-sm border border-white/10">
+            <p className="text-blue-200/80 text-sm">
+              Need help with any of these resources? Contact our support team or refer to the workshop documentation.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
