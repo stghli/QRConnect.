@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,6 @@ import AnalyticsView from './admin/AnalyticsView';
 import AdminScheduleManager from './admin/AdminScheduleManager';
 import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
-import AdminUserManagement from './admin/AdminUserManagement';
 import AnimatedBackground from './AnimatedBackground';
 import AdminFeedbackView from './admin/AdminFeedbackView';
 import type { Attendee, ScheduleItem, Feedback } from '../types';
