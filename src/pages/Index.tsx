@@ -16,6 +16,7 @@ const Index = () => {
     feedback,
     resources,
     analytics,
+    isReturningUser,
     handleAdminLogin,
     setCurrentScreen,
     handleRegistration,
@@ -34,6 +35,8 @@ const Index = () => {
     handleDeleteResource,
     trackDownload,
     trackView,
+    handleCheckIn,
+    handleUndoCheckIn,
   } = useAppController();
 
   return (
@@ -70,6 +73,8 @@ const Index = () => {
           analytics={analytics}
           trackDownload={trackDownload}
           trackView={trackView}
+          onCheckIn={handleCheckIn}
+          onUndoCheckIn={handleUndoCheckIn}
         />
       </div>
 
