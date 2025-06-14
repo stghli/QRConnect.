@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog, MessageSquare } from 'lucide-react';
+import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
@@ -51,12 +50,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onDeleteResource,
   analytics,
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Shield, component: AdminOverview },
     { id: 'attendees', label: 'Attendees', icon: Users, component: AdminAttendeesList, count: attendees.length },
-    { id: 'userManagement', label: 'User Management', icon: UserCog, component: AdminUserManagement },
     { id: 'resources', label: 'Resources', icon: FileText, component: AdminResourcesList },
     { id: 'analytics', label: 'Analytics', icon: BarChart, component: AdminAnalytics },
     { id: 'schedule', label: 'Schedule', icon: Calendar, component: AdminScheduleManager },
@@ -70,9 +68,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       case 'overview':
         return <AdminOverview attendees={attendees} />;
       case 'attendees':
-        return <AdminAttendeesList attendees={attendees} />;
-      case 'userManagement':
-        return <AdminUserManagement 
+        return <AdminAttendeesList 
           attendees={attendees} 
           onAddAttendee={onAddAttendee}
           onRemoveAttendee={onRemoveAttendee}
@@ -85,16 +81,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           onUpdateResource={onUpdateResource}
           onDeleteResource={onDeleteResource}
         />;
-      case 'analytics':
-        return <AdvancedAnalytics analytics={analytics} resources={resources} />;
-      case 'schedule':
-        return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
-      case 'notifications':
-        return <AdminNotifications attendees={attendees} onSendNotification={onSendNotification} />;
-      case 'feedback':
-        return <AdminFeedbackView feedback={feedback} />;
-      case 'settings':
-        return <AdminSettings />;
       default:
         return <AdminOverview attendees={attendees} />;
     }
