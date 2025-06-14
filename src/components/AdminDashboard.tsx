@@ -14,19 +14,6 @@ import AnimatedBackground from './AnimatedBackground';
 import AdminFeedbackView from './admin/AdminFeedbackView';
 import type { Attendee, ScheduleItem, Feedback } from '../types';
 
-interface Attendee {
-  id: string;
-  name: string;
-  registeredAt: Date;
-  accessCode: string;
-}
-
-interface ScheduleItem {
-  time: string;
-  title: string;
-  description: string;
-}
-
 interface AdminDashboardProps {
   attendees: Attendee[];
   schedule: ScheduleItem[];
