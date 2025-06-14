@@ -43,6 +43,7 @@ interface ScreenManagerProps {
   trackView: (filename: string) => void;
   onCheckIn: (id: string) => void;
   onUndoCheckIn: (id: string) => void;
+  onBulkCheckIn: (ids: string[]) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -74,6 +75,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   trackView,
   onCheckIn,
   onUndoCheckIn,
+  onBulkCheckIn,
 }) => {
   switch (currentScreen) {
     case 'qr':
@@ -110,6 +112,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           analytics={analytics}
           onCheckIn={onCheckIn}
           onUndoCheckIn={onUndoCheckIn}
+          onBulkCheckIn={onBulkCheckIn}
         />
       );
     case 'welcome':

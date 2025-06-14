@@ -30,6 +30,7 @@ export const useAppController = () => {
     getCurrentUser,
     handleCheckIn,
     handleUndoCheckIn,
+    handleBulkCheckIn,
   } = useAttendeeManagement();
 
   const { schedule, handleScheduleUpdate } = useScheduleManagement();
@@ -141,5 +142,6 @@ export const useAppController = () => {
     trackView,
     handleCheckIn,
     handleUndoCheckIn,
+    handleBulkCheckIn,
   };
 };

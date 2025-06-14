@@ -74,6 +74,15 @@ export const useAttendeeManagement = () => {
     ));
   };
 
+  const handleBulkCheckIn = (ids: string[]) => {
+    const now = new Date();
+    setAttendees(currentAttendees => currentAttendees.map(attendee =>
+      ids.includes(attendee.id) && !attendee.checkedIn
+        ? { ...attendee, checkedIn: true, checkedInAt: now }
+        : attendee
+    ));
+  };
+
   const handleUndoCheckIn = (id: string) => {
     setAttendees(currentAttendees => currentAttendees.map(attendee =>
       attendee.id === id && attendee.checkedIn
@@ -110,5 +119,6 @@ export const useAttendeeManagement = () => {
     getCurrentUser,
     handleCheckIn,
     handleUndoCheckIn,
+    handleBulkCheckIn,
   };
 };

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Check, Search, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -8,15 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Attendee } from '../../types';
 import { toast } from 'sonner';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface AdminCheckinProps {
   attendees: Attendee[];
   onCheckIn: (id: string) => void;
   onUndoCheckIn: (id: string) => void;
+  onBulkCheckIn: (ids: string[]) => void;
 }
 
-const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUndoCheckIn }) => {
+const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUndoCheckIn, onBulkCheckIn }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handleCheckIn = (id: string, name: string) => {
     onCheckIn(id);
@@ -28,11 +31,40 @@ const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUnd
     toast.info(`Check-in for ${name} has been undone.`);
   };
 
-  const filteredAttendees = attendees.filter(attendee =>
+  const filteredAttendees = useMemo(() => attendees.filter(attendee =>
     attendee.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => a.name.localeCompare(b.name));
+  ).sort((a, b) => a.name.localeCompare(b.name)), [attendees, searchTerm]);
   
   const checkedInCount = attendees.filter(a => a.checkedIn).length;
+
+  const handleSelect = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+  
+  const handleSelectAll = () => {
+    if (selectedIds.length === filteredAttendees.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredAttendees.map(a => a.id));
+    }
+  };
+  
+  const handleBulkCheckInClick = () => {
+    const idsToCheckIn = selectedIds.filter(id => {
+      const attendee = attendees.find(a => a.id === id);
+      return attendee && !attendee.checkedIn;
+    });
+
+    if (idsToCheckIn.length > 0) {
+      onBulkCheckIn(idsToCheckIn);
+      toast.success(`Checked in ${idsToCheckIn.length} attendees.`);
+    } else {
+      toast.info("Selected attendees are already checked in or selection is empty.");
+    }
+    setSelectedIds([]);
+  };
 
   return (
     <Card>
@@ -60,6 +92,17 @@ const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUnd
         </div>
       </CardHeader>
       <CardContent>
+        {selectedIds.length > 0 && (
+          <div className="flex items-center gap-4 p-4 bg-elegant-surface-light/50 rounded-lg mb-4 border border-elegant-primary/20">
+            <p className="text-sm font-medium text-elegant-primary flex-grow">
+              {selectedIds.length} attendee(s) selected.
+            </p>
+            <Button onClick={handleBulkCheckInClick} size="sm">
+              <Check className="mr-2 h-4 w-4" />
+              Check In Selected
+            </Button>
+          </div>
+        )}
         {filteredAttendees.length === 0 ? (
           <div className="text-center py-8">
             <Users className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
@@ -70,6 +113,19 @@ const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUnd
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={
+                        filteredAttendees.length > 0 && selectedIds.length === filteredAttendees.length
+                          ? true
+                          : selectedIds.length > 0
+                          ? 'indeterminate'
+                          : false
+                      }
+                      onCheckedChange={handleSelectAll}
+                      aria-label="Select all"
+                    />
+                  </TableHead>
                   <TableHead className="text-elegant-primary">Name</TableHead>
                   <TableHead className="text-elegant-primary">Status</TableHead>
                   <TableHead className="text-elegant-primary">Check-in Time</TableHead>
@@ -78,7 +134,14 @@ const AdminCheckin: React.FC<AdminCheckinProps> = ({ attendees, onCheckIn, onUnd
               </TableHeader>
               <TableBody>
                 {filteredAttendees.map((attendee) => (
-                  <TableRow key={attendee.id}>
+                  <TableRow key={attendee.id} data-state={selectedIds.includes(attendee.id) ? "selected" : undefined}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedIds.includes(attendee.id)}
+                        onCheckedChange={() => handleSelect(attendee.id)}
+                        aria-label={`Select ${attendee.name}`}
+                      />
+                    </TableCell>
                     <TableCell className="text-foreground font-medium">{attendee.name}</TableCell>
                     <TableCell>
                       {attendee.checkedIn ? (

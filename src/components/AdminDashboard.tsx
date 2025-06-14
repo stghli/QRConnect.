@@ -35,6 +35,7 @@ interface AdminDashboardProps {
   analytics: AnalyticsData;
   onCheckIn: (id: string) => void;
   onUndoCheckIn: (id: string) => void;
+  onBulkCheckIn: (ids: string[]) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
@@ -54,6 +55,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   analytics,
   onCheckIn,
   onUndoCheckIn,
+  onBulkCheckIn,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'checkin' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
   const checkedInCount = attendees.filter(a => a.checkedIn).length;
@@ -79,6 +81,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           attendees={attendees}
           onCheckIn={onCheckIn}
           onUndoCheckIn={onUndoCheckIn}
+          onBulkCheckIn={onBulkCheckIn}
         />;
       case 'attendees':
         return <AdminAttendeesList 

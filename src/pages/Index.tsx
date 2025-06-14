@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useAppController } from '../hooks/useAppController';
@@ -37,6 +36,7 @@ const Index = () => {
     trackView,
     handleCheckIn,
     handleUndoCheckIn,
+    handleBulkCheckIn,
   } = useAppController();
 
   return (
@@ -75,6 +75,7 @@ const Index = () => {
           trackView={trackView}
           onCheckIn={handleCheckIn}
           onUndoCheckIn={handleUndoCheckIn}
+          onBulkCheckIn={handleBulkCheckIn}
         />
       </div>
 
