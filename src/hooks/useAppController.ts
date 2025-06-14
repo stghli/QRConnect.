@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useUserSession } from './useUserSession';
 import { useAttendeeManagement } from './useAttendeeManagement';
@@ -6,6 +7,7 @@ import { useNotificationSystem } from './useNotificationSystem';
 import { useFeedbackManagement } from './useFeedbackManagement';
 import { useResourceManagement } from './useResourceManagement';
 import { useAnalytics } from './useAnalytics';
+import { useAppSettings } from './useAppSettings';
 import { toast } from 'sonner';
 import type { Attendee } from '../types';
 
@@ -38,6 +40,7 @@ export const useAppController = () => {
   const { feedback, addFeedback } = useFeedbackManagement();
   const { resources, handleAddResource, handleUpdateResource, handleDeleteResource } = useResourceManagement();
   const { analytics, trackDownload, trackView } = useAnalytics();
+  const { settings, setEventStatus } = useAppSettings();
   const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -122,6 +125,7 @@ export const useAppController = () => {
     resources,
     analytics,
     isReturningUser,
+    settings,
     handleAdminLogin,
     setCurrentScreen,
     handleRegistration,
@@ -143,5 +147,6 @@ export const useAppController = () => {
     handleCheckIn,
     handleUndoCheckIn,
     handleBulkCheckIn,
+    setEventStatus,
   };
 };

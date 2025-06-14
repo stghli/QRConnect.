@@ -1,3 +1,4 @@
+
 import React from 'react';
 import QRCodeScreen from './QRCodeScreen';
 import WelcomeScreen from './WelcomeScreen';
@@ -10,9 +11,11 @@ import AdminDashboard from './AdminDashboard';
 import CodeVerificationScreen from './CodeVerificationScreen';
 import CheckedInScreen from './CheckedInScreen';
 import FeedbackScreen from './FeedbackScreen';
+import PostEventLandingPage from './PostEventLandingPage';
 import type { ScreenType, Attendee, ScheduleItem, Feedback } from '../types';
 import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
 import type { AnalyticsData } from '../hooks/useAnalytics';
+import type { AppSettings } from '../hooks/useAppSettings';
 
 interface ScreenManagerProps {
   currentScreen: ScreenType;
@@ -44,6 +47,8 @@ interface ScreenManagerProps {
   onCheckIn: (id: string) => void;
   onUndoCheckIn: (id: string) => void;
   onBulkCheckIn: (ids: string[]) => void;
+  settings: AppSettings;
+  setEventStatus: (isActive: boolean) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -54,6 +59,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   currentUser,
   isAdmin,
   resources,
+  settings,
   onAdminLogin,
   setCurrentScreen,
   onGoToCodeVerification,
@@ -76,7 +82,12 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   onCheckIn,
   onUndoCheckIn,
   onBulkCheckIn,
+  setEventStatus,
 }) => {
+  if (!settings.isEventActive && !isAdmin && ['qr', 'welcome', 'registration', 'codeVerification'].includes(currentScreen)) {
+    return <PostEventLandingPage />;
+  }
+
   switch (currentScreen) {
     case 'qr':
       return (
@@ -172,6 +183,9 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
         />
       );
     default:
+      if (!settings.isEventActive && !isAdmin) {
+        return <PostEventLandingPage />;
+      }
       return (
         <QRCodeScreen
           attendeeCount={attendees.length}
