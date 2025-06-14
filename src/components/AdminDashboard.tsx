@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,7 @@ interface AdminDashboardProps {
   onAddAttendee: (name: string) => void;
   onRemoveAttendee: (id: string) => void;
   onRegenerateCode: (id: string) => string;
+  onSendNotification: (title: string, message: string) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
@@ -41,7 +43,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onBack,
   onAddAttendee,
   onRemoveAttendee,
-  onRegenerateCode
+  onRegenerateCode,
+  onSendNotification
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings'>('overview');
 
@@ -76,7 +79,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       case 'schedule':
         return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
       case 'notifications':
-        return <AdminNotifications attendees={attendees} />;
+        return <AdminNotifications attendees={attendees} onSendNotification={onSendNotification} />;
       case 'settings':
         return <AdminSettings />;
       default:

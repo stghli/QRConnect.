@@ -15,9 +15,10 @@ interface Attendee {
 
 interface AdminNotificationsProps {
   attendees: Attendee[];
+  onSendNotification: (title: string, message: string) => void;
 }
 
-const AdminNotifications: React.FC<AdminNotificationsProps> = ({ attendees }) => {
+const AdminNotifications: React.FC<AdminNotificationsProps> = ({ attendees, onSendNotification }) => {
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const [sentNotifications, setSentNotifications] = useState<Array<{
@@ -30,6 +31,8 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ attendees }) =>
 
   const handleSendNotification = () => {
     if (!title || !message) return;
+
+    onSendNotification(title, message);
 
     const notification = {
       id: Date.now().toString(),

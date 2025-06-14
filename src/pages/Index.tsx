@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import QRCodeScreen from '../components/QRCodeScreen';
 import WelcomeScreen from '../components/WelcomeScreen';
@@ -13,6 +13,8 @@ import CheckedInScreen from '../components/CheckedInScreen';
 import { useUserSession } from '../hooks/useUserSession';
 import { useAttendeeManagement } from '../hooks/useAttendeeManagement';
 import { useScheduleManagement } from '../hooks/useScheduleManagement';
+import { useNotificationSystem } from '../hooks/useNotificationSystem';
+import { toast } from 'sonner';
 
 const Index = () => {
   const {
@@ -37,6 +39,8 @@ const Index = () => {
   } = useAttendeeManagement();
 
   const { schedule, handleScheduleUpdate } = useScheduleManagement();
+  const { notifications, addNotification } = useNotificationSystem();
+  const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if user came via QR code scan
@@ -45,6 +49,20 @@ const Index = () => {
       setCurrentScreen('welcome');
     }
   }, [setCurrentScreen]);
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      const latestNotification = notifications[notifications.length - 1];
+      if (latestNotification.id !== lastNotifiedId && !isAdmin) {
+        toast.info(latestNotification.title, {
+          description: latestNotification.message,
+          duration: 10000,
+          position: 'top-right',
+        });
+        setLastNotifiedId(latestNotification.id);
+      }
+    }
+  }, [notifications, lastNotifiedId, isAdmin]);
 
   const handleRegistration = (name: string) => {
     const result = addAttendee(name);
@@ -87,6 +105,10 @@ const Index = () => {
     return result.attendee;
   };
 
+  const handleAdminSendNotification = (title: string, message: string) => {
+    addNotification(title, message);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 relative">
       {/* Enhanced Animated Background */}
@@ -119,6 +141,7 @@ const Index = () => {
             onAddAttendee={handleAdminAddAttendee}
             onRemoveAttendee={handleRemoveAttendee}
             onRegenerateCode={handleRegenerateCode}
+            onSendNotification={handleAdminSendNotification}
           />
         )}
         

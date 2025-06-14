@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ScheduleItem } from '../types';
 
 const defaultSchedule: ScheduleItem[] = [
@@ -41,7 +41,24 @@ const defaultSchedule: ScheduleItem[] = [
 ];
 
 export const useScheduleManagement = () => {
-  const [schedule, setSchedule] = useState<ScheduleItem[]>(defaultSchedule);
+  const [schedule, setSchedule] = useState<ScheduleItem[]>(() => {
+    try {
+      const storedSchedule = window.localStorage.getItem('schedule');
+      return storedSchedule ? JSON.parse(storedSchedule) : defaultSchedule;
+    } catch (error) {
+      console.error("Failed to read schedule from localStorage", error);
+      return defaultSchedule;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('schedule', JSON.stringify(schedule));
+    } catch (error) {
+      console.error("Failed to write schedule to localStorage", error);
+    }
+  }, [schedule]);
+
 
   const handleScheduleUpdate = (newSchedule: ScheduleItem[]) => {
     setSchedule(newSchedule);
