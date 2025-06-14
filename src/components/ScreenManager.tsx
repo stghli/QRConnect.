@@ -12,6 +12,7 @@ import CheckedInScreen from './CheckedInScreen';
 import FeedbackScreen from './FeedbackScreen';
 import type { ScreenType, Attendee, ScheduleItem, Feedback } from '../types';
 import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
+import type { AnalyticsData } from '../hooks/useAnalytics';
 
 interface ScreenManagerProps {
   currentScreen: ScreenType;
@@ -37,6 +38,9 @@ interface ScreenManagerProps {
   onAddResource: (resourceType: ResourceType, resource: Resource) => void;
   onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
   onDeleteResource: (resourceType: ResourceType, index: number) => void;
+  analytics: AnalyticsData;
+  trackDownload: (filename: string) => void;
+  trackView: (filename: string) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -63,6 +67,9 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   onAddResource,
   onUpdateResource,
   onDeleteResource,
+  analytics,
+  trackDownload,
+  trackView,
 }) => {
   switch (currentScreen) {
     case 'qr':
@@ -96,6 +103,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           onAddResource={onAddResource}
           onUpdateResource={onUpdateResource}
           onDeleteResource={onDeleteResource}
+          analytics={analytics}
         />
       );
     case 'welcome':
@@ -150,6 +158,8 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           userName={currentUser}
           onBack={() => setCurrentScreen('program')}
           resources={resources}
+          trackDownload={trackDownload}
+          trackView={trackView}
         />
       );
     default:

@@ -13,9 +13,11 @@ interface ResourcesScreenProps {
   userName: string;
   onBack: () => void;
   resources: Resources;
+  trackDownload: (filename: string) => void;
+  trackView: (filename: string) => void;
 }
 
-const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, resources }) => {
+const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, resources, trackDownload, trackView }) => {
   const { cheatsheets, toolkits, slides } = resources;
   const [viewerState, setViewerState] = useState<{
     isOpen: boolean;
@@ -28,6 +30,7 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
   });
 
   const handleDownload = (filename: string) => {
+    trackDownload(filename);
     // In a real app, this would trigger an actual download
     console.log(`Downloading ${filename}`);
     // Simulate download with a blob URL for demonstration
@@ -43,6 +46,7 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
   };
 
   const handleView = (filename: string, title: string) => {
+    trackView(filename);
     console.log(`Viewing ${filename}`);
     setViewerState({
       isOpen: true,

@@ -15,6 +15,7 @@ const Index = () => {
     schedule,
     feedback,
     resources,
+    analytics,
     handleAdminLogin,
     setCurrentScreen,
     handleRegistration,
@@ -31,6 +32,8 @@ const Index = () => {
     handleAddResource,
     handleUpdateResource,
     handleDeleteResource,
+    trackDownload,
+    trackView,
   } = useAppController();
 
   return (
@@ -64,6 +67,9 @@ const Index = () => {
           onAddResource={handleAddResource}
           onUpdateResource={handleUpdateResource}
           onDeleteResource={handleDeleteResource}
+          analytics={analytics}
+          trackDownload={trackDownload}
+          trackView={trackView}
         />
       </div>
 

@@ -15,6 +15,8 @@ import AnimatedBackground from './AnimatedBackground';
 import AdminFeedbackView from './admin/AdminFeedbackView';
 import type { Attendee, ScheduleItem, Feedback } from '../types';
 import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
+import type { AnalyticsData } from '../hooks/useAnalytics';
+import AdvancedAnalytics from './admin/AdvancedAnalytics';
 
 interface AdminDashboardProps {
   attendees: Attendee[];
@@ -30,6 +32,7 @@ interface AdminDashboardProps {
   onAddResource: (resourceType: ResourceType, resource: Resource) => void;
   onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
   onDeleteResource: (resourceType: ResourceType, index: number) => void;
+  analytics: AnalyticsData;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
@@ -45,7 +48,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onSendNotification,
   onAddResource,
   onUpdateResource,
-  onDeleteResource
+  onDeleteResource,
+  analytics,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
 
@@ -82,7 +86,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           onDeleteResource={onDeleteResource}
         />;
       case 'analytics':
-        return <AnalyticsView attendees={attendees} />;
+        return <AdvancedAnalytics analytics={analytics} resources={resources} />;
       case 'schedule':
         return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
       case 'notifications':
