@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { FileText, FolderOpen, Book, Wrench } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -66,27 +65,30 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) =
 
           {/* Tabs Section */}
           <Tabs defaultValue="cheatsheets" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2 mb-8 gap-1">
+            <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-1.5 mb-8 gap-0.5 h-auto">
               <TabsTrigger 
                 value="cheatsheets" 
-                className="data-[state=active]:bg-blue-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-3 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
+                className="data-[state=active]:bg-blue-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-2 py-2.5 font-medium transition-all duration-300 text-xs sm:text-sm flex items-center justify-center min-w-0 flex-1"
               >
-                <FolderOpen className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                <span className="truncate">Quick Reference</span>
+                <FolderOpen className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 flex-shrink-0" />
+                <span className="truncate hidden sm:inline">Quick Reference</span>
+                <span className="truncate sm:hidden">Reference</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="toolkits" 
-                className="data-[state=active]:bg-purple-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-3 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
+                className="data-[state=active]:bg-purple-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-2 py-2.5 font-medium transition-all duration-300 text-xs sm:text-sm flex items-center justify-center min-w-0 flex-1"
               >
-                <Wrench className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                <span className="truncate">Tools & Kits</span>
+                <Wrench className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 flex-shrink-0" />
+                <span className="truncate hidden sm:inline">Tools & Kits</span>
+                <span className="truncate sm:hidden">Tools</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="slides" 
-                className="data-[state=active]:bg-indigo-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-3 py-3 font-medium transition-all duration-300 text-sm flex items-center justify-center min-w-0"
+                className="data-[state=active]:bg-indigo-600/60 data-[state=active]:text-white text-blue-200 rounded-lg px-2 py-2.5 font-medium transition-all duration-300 text-xs sm:text-sm flex items-center justify-center min-w-0 flex-1"
               >
-                <Book className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                <span className="truncate">Presentations</span>
+                <Book className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 flex-shrink-0" />
+                <span className="truncate hidden sm:inline">Presentations</span>
+                <span className="truncate sm:hidden">Slides</span>
               </TabsTrigger>
             </TabsList>
 
