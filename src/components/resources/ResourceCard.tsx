@@ -17,7 +17,7 @@ interface ResourceCardProps {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   onDownload: (filename: string) => void;
-  onView: (filename: string, title: string) => void;
+  onView: (filename: string, title: string, description: string) => void;
 }
 
 const ResourceCard: React.FC<ResourceCardProps> = ({ item, icon: Icon, color, onDownload, onView }) => (
@@ -47,7 +47,7 @@ const ResourceCard: React.FC<ResourceCardProps> = ({ item, icon: Icon, color, on
         </div>
         <div className="flex gap-2 flex-1 justify-end">
           <Button 
-            onClick={() => onView(item.filename, item.title)}
+            onClick={() => onView(item.filename, item.title, item.description)}
             size="sm"
             variant="outline"
             className="bg-transparent border-blue-500/50 text-blue-200 hover:bg-blue-600/20 hover:border-blue-400 transition-all duration-300 flex-1 max-w-[80px]"

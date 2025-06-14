@@ -23,10 +23,12 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
     isOpen: boolean;
     filename: string;
     title: string;
+    description: string;
   }>({
     isOpen: false,
     filename: '',
-    title: ''
+    title: '',
+    description: ''
   });
 
   const handleDownload = (filename: string) => {
@@ -45,13 +47,14 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
     URL.revokeObjectURL(url);
   };
 
-  const handleView = (filename: string, title: string) => {
+  const handleView = (filename: string, title: string, description: string) => {
     trackView(filename);
     console.log(`Viewing ${filename}`);
     setViewerState({
       isOpen: true,
       filename,
-      title
+      title,
+      description
     });
   };
 
@@ -59,7 +62,8 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
     setViewerState({
       isOpen: false,
       filename: '',
-      title: ''
+      title: '',
+      description: ''
     });
   };
 
@@ -154,6 +158,7 @@ const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, res
         onClose={handleCloseViewer}
         filename={viewerState.filename}
         title={viewerState.title}
+        description={viewerState.description}
         onDownload={handleDownload}
       />
     </>

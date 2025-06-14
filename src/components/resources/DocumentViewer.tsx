@@ -9,6 +9,7 @@ interface DocumentViewerProps {
   onClose: () => void;
   filename: string;
   title: string;
+  description: string;
   onDownload: (filename: string) => void;
 }
 
@@ -17,6 +18,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
   onClose, 
   filename, 
   title, 
+  description,
   onDownload 
 }) => {
   const [zoom, setZoom] = React.useState(100);
@@ -100,7 +102,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   </p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h2 className="font-semibold mb-2">Document Preview</h2>
-                    <p>This is a simulated document preview. In a real application, this would display the actual document content using a PDF viewer or document rendering library.</p>
+                    <p>{description}</p>
                   </div>
                   <div className="space-y-3">
                     <h3 className="font-semibold text-base sm:text-lg">Key Features:</h3>
