@@ -31,7 +31,7 @@ interface AdminDashboardProps {
   onBack: () => void;
   onAddAttendee: (name: string) => void;
   onRemoveAttendee: (id: string) => void;
-  onRegenerateCode: (id: string) => void;
+  onRegenerateCode: (id: string) => string;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
