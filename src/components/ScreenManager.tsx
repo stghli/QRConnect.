@@ -1,4 +1,3 @@
-
 import React from 'react';
 import QRCodeScreen from './QRCodeScreen';
 import WelcomeScreen from './WelcomeScreen';
@@ -84,7 +83,8 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   onBulkCheckIn,
   setEventStatus,
 }) => {
-  if (!settings.isEventActive && !isAdmin && ['qr', 'welcome', 'registration', 'codeVerification'].includes(currentScreen)) {
+  // Show post-event landing page when event is inactive (unless admin is logged in)
+  if (!settings.isEventActive && !isAdmin) {
     return <PostEventLandingPage />;
   }
 
@@ -183,9 +183,6 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
         />
       );
     default:
-      if (!settings.isEventActive && !isAdmin) {
-        return <PostEventLandingPage />;
-      }
       return (
         <QRCodeScreen
           attendeeCount={attendees.length}
