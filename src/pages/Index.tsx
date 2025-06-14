@@ -14,7 +14,11 @@ import { useUserSession } from '../hooks/useUserSession';
 import { useAttendeeManagement } from '../hooks/useAttendeeManagement';
 import { useScheduleManagement } from '../hooks/useScheduleManagement';
 import { useNotificationSystem } from '../hooks/useNotificationSystem';
+import { useFeedbackManagement } from '../hooks/useFeedbackManagement';
 import { toast } from 'sonner';
+import FeedbackScreen from '../components/FeedbackScreen';
+import { Button } from '@/components/ui/button';
+import { MessageSquare } from 'lucide-react';
 
 const Index = () => {
   const {
@@ -40,6 +44,7 @@ const Index = () => {
 
   const { schedule, handleScheduleUpdate } = useScheduleManagement();
   const { notifications, addNotification } = useNotificationSystem();
+  const { feedback, addFeedback } = useFeedbackManagement();
   const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,6 +114,11 @@ const Index = () => {
     addNotification(title, message);
   };
 
+  const handleFeedbackSubmit = (rating: number, comment: string) => {
+    addFeedback(rating, comment);
+    setCurrentScreen('program');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 relative">
       {/* Enhanced Animated Background */}
@@ -136,6 +146,7 @@ const Index = () => {
           <AdminDashboard
             attendees={attendees}
             schedule={schedule}
+            feedback={feedback}
             onScheduleUpdate={handleScheduleUpdate}
             onBack={() => setCurrentScreen('qr')}
             onAddAttendee={handleAdminAddAttendee}
@@ -172,6 +183,13 @@ const Index = () => {
           />
         )}
         
+        {currentScreen === 'feedback' && (
+          <FeedbackScreen 
+            onSubmit={handleFeedbackSubmit}
+            onBack={() => setCurrentScreen('program')}
+          />
+        )}
+        
         {currentScreen === 'program' && (
           isAdmin ? (
             <EditableProgramOutline 
@@ -195,6 +213,17 @@ const Index = () => {
           />
         )}
       </div>
+
+      {/* Floating Feedback Button */}
+      {(currentScreen === 'checkedIn' || currentScreen === 'program' || currentScreen === 'resources') && !isAdmin && (
+        <Button
+          onClick={() => setCurrentScreen('feedback')}
+          className="fixed bottom-6 right-6 elegant-button text-white border-0 z-50 rounded-full h-14 w-14 p-0 shadow-lg hover-scale"
+          aria-label="Leave Feedback"
+        >
+          <MessageSquare className="w-6 h-6" />
+        </Button>
+      )}
     </div>
   );
 };

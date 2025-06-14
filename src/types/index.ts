@@ -1,3 +1,4 @@
+import { type } from "os";
 
 export interface Attendee {
   id: string;
@@ -13,6 +14,13 @@ export interface ScheduleItem {
   speaker?: string;
 }
 
+export interface Feedback {
+  id: string;
+  rating: number;
+  comment: string;
+  submittedAt: Date;
+}
+
 export interface Notification {
   id: string;
   title: string;
@@ -20,4 +28,4 @@ export interface Notification {
   sentAt: Date;
 }
 
-export type ScreenType = 'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification' | 'checkedIn';
+export type ScreenType = 'qr' | 'welcome' | 'registration' | 'program' | 'resources' | 'adminLogin' | 'adminDashboard' | 'codeVerification' | 'checkedIn' | 'feedback';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog } from 'lucide-react';
+import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
@@ -11,6 +11,8 @@ import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
 import AdminUserManagement from './admin/AdminUserManagement';
 import AnimatedBackground from './AnimatedBackground';
+import AdminFeedbackView from './admin/AdminFeedbackView';
+import type { Attendee, ScheduleItem, Feedback } from '../types';
 
 interface Attendee {
   id: string;
@@ -28,6 +30,7 @@ interface ScheduleItem {
 interface AdminDashboardProps {
   attendees: Attendee[];
   schedule: ScheduleItem[];
+  feedback: Feedback[];
   onScheduleUpdate: (newSchedule: ScheduleItem[]) => void;
   onBack: () => void;
   onAddAttendee: (name: string) => Attendee | undefined;
@@ -39,6 +42,7 @@ interface AdminDashboardProps {
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   attendees, 
   schedule, 
+  feedback,
   onScheduleUpdate, 
   onBack,
   onAddAttendee,
@@ -46,7 +50,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onRegenerateCode,
   onSendNotification
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Shield, component: AdminOverview },
@@ -56,6 +60,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     { id: 'analytics', label: 'Analytics', icon: BarChart, component: AdminAnalytics },
     { id: 'schedule', label: 'Schedule', icon: Calendar, component: AdminScheduleManager },
     { id: 'notifications', label: 'Notifications', icon: Bell, component: AdminNotifications },
+    { id: 'feedback', label: 'Feedback', icon: MessageSquare, component: AdminFeedbackView, count: feedback.length },
     { id: 'settings', label: 'Settings', icon: Settings, component: AdminSettings }
   ];
 
@@ -80,6 +85,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
       case 'notifications':
         return <AdminNotifications attendees={attendees} onSendNotification={onSendNotification} />;
+      case 'feedback':
+        return <AdminFeedbackView feedback={feedback} />;
       case 'settings':
         return <AdminSettings />;
       default:
