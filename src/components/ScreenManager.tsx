@@ -1,5 +1,5 @@
+
 import React from 'react';
-import QRCodeScreen from './QRCodeScreen';
 import WelcomeScreen from './WelcomeScreen';
 import RegistrationScreen from './RegistrationScreen';
 import ProgramOutlineScreen from './ProgramOutlineScreen';
@@ -90,18 +90,13 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
 
   switch (currentScreen) {
     case 'qr':
-      return (
-        <QRCodeScreen
-          attendeeCount={attendees.length}
-          onAdminLogin={() => setCurrentScreen('adminLogin')}
-          onCodeVerification={onGoToCodeVerification}
-        />
-      );
+      // Redirect QR screen to welcome screen since landing page is removed
+      return <WelcomeScreen onGetStarted={() => setCurrentScreen('registration')} />;
     case 'adminLogin':
       return (
         <AdminLoginScreen
           onLogin={onAdminLogin}
-          onBack={() => setCurrentScreen('qr')}
+          onBack={() => setCurrentScreen('welcome')}
         />
       );
     case 'adminDashboard':
@@ -111,7 +106,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           schedule={schedule}
           feedback={feedback}
           onScheduleUpdate={onScheduleUpdate}
-          onBack={() => setCurrentScreen('qr')}
+          onBack={() => setCurrentScreen('welcome')}
           onAddAttendee={onAdminAddAttendee}
           onRemoveAttendee={onRemoveAttendee}
           onRegenerateCode={onRegenerateCode}
@@ -139,7 +134,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
       return (
         <CodeVerificationScreen
           onVerify={onVerifyCode}
-          onBack={() => setCurrentScreen('qr')}
+          onBack={() => setCurrentScreen('welcome')}
         />
       );
     case 'checkedIn':
@@ -183,13 +178,8 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
         />
       );
     default:
-      return (
-        <QRCodeScreen
-          attendeeCount={attendees.length}
-          onAdminLogin={() => setCurrentScreen('adminLogin')}
-          onCodeVerification={onGoToCodeVerification}
-        />
-      );
+      // Default to welcome screen instead of QR screen
+      return <WelcomeScreen onGetStarted={() => setCurrentScreen('registration')} />;
   }
 };
 

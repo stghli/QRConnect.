@@ -44,7 +44,7 @@ export const useAppController = () => {
   const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if user came via QR code scan
+    // Check if user came via QR code scan - redirect to welcome
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('join') === 'true') {
       setCurrentScreen('welcome');
