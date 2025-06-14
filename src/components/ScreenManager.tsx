@@ -1,5 +1,5 @@
-
 import React from 'react';
+import QRCodeScreen from './QRCodeScreen';
 import WelcomeScreen from './WelcomeScreen';
 import RegistrationScreen from './RegistrationScreen';
 import ProgramOutlineScreen from './ProgramOutlineScreen';
@@ -10,11 +10,9 @@ import AdminDashboard from './AdminDashboard';
 import CodeVerificationScreen from './CodeVerificationScreen';
 import CheckedInScreen from './CheckedInScreen';
 import FeedbackScreen from './FeedbackScreen';
-import PostEventLandingPage from './PostEventLandingPage';
 import type { ScreenType, Attendee, ScheduleItem, Feedback } from '../types';
 import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
 import type { AnalyticsData } from '../hooks/useAnalytics';
-import type { AppSettings } from '../hooks/useAppSettings';
 
 interface ScreenManagerProps {
   currentScreen: ScreenType;
@@ -46,8 +44,6 @@ interface ScreenManagerProps {
   onCheckIn: (id: string) => void;
   onUndoCheckIn: (id: string) => void;
   onBulkCheckIn: (ids: string[]) => void;
-  settings: AppSettings;
-  setEventStatus: (isActive: boolean) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -58,7 +54,6 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   currentUser,
   isAdmin,
   resources,
-  settings,
   onAdminLogin,
   setCurrentScreen,
   onGoToCodeVerification,
@@ -81,22 +76,21 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   onCheckIn,
   onUndoCheckIn,
   onBulkCheckIn,
-  setEventStatus,
 }) => {
-  // Show post-event landing page when event is inactive (unless admin is logged in)
-  if (!settings.isEventActive && !isAdmin) {
-    return <PostEventLandingPage />;
-  }
-
   switch (currentScreen) {
     case 'qr':
-      // Redirect QR screen to welcome screen since landing page is removed
-      return <WelcomeScreen onGetStarted={() => setCurrentScreen('registration')} />;
+      return (
+        <QRCodeScreen
+          attendeeCount={attendees.length}
+          onAdminLogin={() => setCurrentScreen('adminLogin')}
+          onCodeVerification={onGoToCodeVerification}
+        />
+      );
     case 'adminLogin':
       return (
         <AdminLoginScreen
           onLogin={onAdminLogin}
-          onBack={() => setCurrentScreen('welcome')}
+          onBack={() => setCurrentScreen('qr')}
         />
       );
     case 'adminDashboard':
@@ -106,7 +100,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           schedule={schedule}
           feedback={feedback}
           onScheduleUpdate={onScheduleUpdate}
-          onBack={() => setCurrentScreen('welcome')}
+          onBack={() => setCurrentScreen('qr')}
           onAddAttendee={onAdminAddAttendee}
           onRemoveAttendee={onRemoveAttendee}
           onRegenerateCode={onRegenerateCode}
@@ -134,7 +128,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
       return (
         <CodeVerificationScreen
           onVerify={onVerifyCode}
-          onBack={() => setCurrentScreen('welcome')}
+          onBack={() => setCurrentScreen('qr')}
         />
       );
     case 'checkedIn':
@@ -178,8 +172,13 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
         />
       );
     default:
-      // Default to welcome screen instead of QR screen
-      return <WelcomeScreen onGetStarted={() => setCurrentScreen('registration')} />;
+      return (
+        <QRCodeScreen
+          attendeeCount={attendees.length}
+          onAdminLogin={() => setCurrentScreen('adminLogin')}
+          onCodeVerification={onGoToCodeVerification}
+        />
+      );
   }
 };
 

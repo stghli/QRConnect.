@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useAppController } from '../hooks/useAppController';
@@ -17,7 +16,6 @@ const Index = () => {
     resources,
     analytics,
     isReturningUser,
-    settings,
     handleAdminLogin,
     setCurrentScreen,
     handleRegistration,
@@ -39,7 +37,6 @@ const Index = () => {
     handleCheckIn,
     handleUndoCheckIn,
     handleBulkCheckIn,
-    setEventStatus,
   } = useAppController();
 
   return (
@@ -79,8 +76,6 @@ const Index = () => {
           onCheckIn={handleCheckIn}
           onUndoCheckIn={handleUndoCheckIn}
           onBulkCheckIn={handleBulkCheckIn}
-          settings={settings}
-          setEventStatus={setEventStatus}
         />
       </div>
 
