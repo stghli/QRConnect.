@@ -6,7 +6,16 @@ import { generateAccessCode } from '../utils/codeGenerator';
 export const useAttendeeManagement = () => {
   const [attendees, setAttendees] = useState<Attendee[]>([]);
 
-  const addAttendee = (name: string): Attendee => {
+  const addAttendee = (name: string): { success: boolean; attendee?: Attendee; existingUser?: Attendee } => {
+    // Check if user already exists
+    const existingUser = attendees.find(attendee => 
+      attendee.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+    
+    if (existingUser) {
+      return { success: false, existingUser };
+    }
+
     const accessCode = generateAccessCode();
     const newAttendee: Attendee = {
       id: Date.now().toString(),
@@ -16,9 +25,9 @@ export const useAttendeeManagement = () => {
     };
     setAttendees([...attendees, newAttendee]);
     
-    // Show the access code to the user (in a real app, this would be done differently)
+    // Show the access code to the user
     alert(`Welcome ${name}! Your access code is: ${accessCode}. Please save this code for future access.`);
-    return newAttendee;
+    return { success: true, attendee: newAttendee };
   };
 
   const checkExistingUser = (name: string): Attendee | undefined => {
@@ -42,6 +51,7 @@ export const useAttendeeManagement = () => {
         ? { ...attendee, accessCode: newCode }
         : attendee
     ));
+    return newCode;
   };
 
   const getCurrentUser = (currentUserName: string): Attendee | undefined => {

@@ -14,7 +14,7 @@ interface Attendee {
 interface AttendeeTableRowProps {
   attendee: Attendee;
   onRemoveAttendee: (id: string) => void;
-  onRegenerateCode: (id: string) => void;
+  onRegenerateCode: (id: string) => string;
 }
 
 const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({ 
@@ -25,6 +25,7 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
   const [isCodeVisible, setIsCodeVisible] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [currentCode, setCurrentCode] = useState(attendee.accessCode);
 
   const toggleCodeVisibility = () => {
     setIsCodeVisible(!isCodeVisible);
@@ -42,7 +43,12 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
 
   const handleRegenerateCode = () => {
     setIsRegenerating(true);
-    onRegenerateCode(attendee.id);
+    const newCode = onRegenerateCode(attendee.id);
+    setCurrentCode(newCode);
+    
+    // Show the new code to admin
+    alert(`New access code for ${attendee.name}: ${newCode}`);
+    
     setTimeout(() => setIsRegenerating(false), 1000);
   };
 
@@ -55,7 +61,7 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
       <TableCell className="text-elegant-accent font-mono">
         <div className="flex items-center space-x-2">
           <span>
-            {isCodeVisible ? attendee.accessCode : '••••••'}
+            {isCodeVisible ? currentCode : '••••••'}
           </span>
           <Button
             size="sm"
@@ -69,7 +75,7 @@ const AttendeeTableRow: React.FC<AttendeeTableRowProps> = ({
           </Button>
           <Button
             size="sm"
-            onClick={() => copyToClipboard(attendee.accessCode)}
+            onClick={() => copyToClipboard(currentCode)}
             className="bg-elegant-accent/20 hover:bg-elegant-accent/30 text-elegant-accent p-1 h-6 w-6"
           >
             {isCopied ? 

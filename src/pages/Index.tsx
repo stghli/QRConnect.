@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import AnimatedBackground from '../components/AnimatedBackground';
 import QRCodeScreen from '../components/QRCodeScreen';
@@ -48,16 +47,24 @@ const Index = () => {
   }, [setCurrentScreen]);
 
   const handleRegistration = (name: string) => {
-    const existingUser = checkExistingUser(name);
+    const result = addAttendee(name);
     
-    if (existingUser) {
+    if (!result.success && result.existingUser) {
+      // User already exists, redirect to code verification
       setIsReturningUser(true);
-      setCurrentScreen('codeVerification');
-    } else {
-      addAttendee(name);
+      return result;
+    } else if (result.success && result.attendee) {
+      // New user registered successfully
       setCurrentUser(name);
       setCurrentScreen('checkedIn');
+      return result;
     }
+    
+    return result;
+  };
+
+  const handleExistingUserFound = () => {
+    setCurrentScreen('codeVerification');
   };
 
   const handleCodeVerification = (code: string): boolean => {
@@ -76,9 +83,8 @@ const Index = () => {
 
   // Admin functions for user management
   const handleAdminAddAttendee = (name: string) => {
-    const newAttendee = addAttendee(name);
-    // Don't redirect to checked-in screen for admin additions
-    return newAttendee;
+    const result = addAttendee(name);
+    return result.attendee;
   };
 
   return (
@@ -123,6 +129,7 @@ const Index = () => {
         {currentScreen === 'registration' && (
           <RegistrationScreen 
             onRegister={handleRegistration}
+            onExistingUserFound={handleExistingUserFound}
           />
         )}
         

@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface RegistrationScreenProps {
-  onRegister: (name: string) => void;
+  onRegister: (name: string) => { success: boolean; existingUser?: any };
+  onExistingUserFound: () => void;
 }
 
-const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegister }) => {
+const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegister, onExistingUserFound }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
@@ -26,8 +27,17 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegister }) =
       return;
     }
     
+    const result = onRegister(name.trim());
+    
+    if (!result.success && result.existingUser) {
+      setError('You are already registered! Please use your access code to log in.');
+      setTimeout(() => {
+        onExistingUserFound();
+      }, 2000);
+      return;
+    }
+    
     setError('');
-    onRegister(name.trim());
   };
 
   return (

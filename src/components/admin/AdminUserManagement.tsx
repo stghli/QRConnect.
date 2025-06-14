@@ -14,7 +14,7 @@ interface AdminUserManagementProps {
   attendees: Attendee[];
   onAddAttendee: (name: string) => void;
   onRemoveAttendee: (id: string) => void;
-  onRegenerateCode: (id: string) => void;
+  onRegenerateCode: (id: string) => string;
 }
 
 const AdminUserManagement: React.FC<AdminUserManagementProps> = ({ 

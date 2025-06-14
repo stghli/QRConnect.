@@ -15,7 +15,7 @@ interface Attendee {
 interface AttendeeTableProps {
   attendees: Attendee[];
   onRemoveAttendee: (id: string) => void;
-  onRegenerateCode: (id: string) => void;
+  onRegenerateCode: (id: string) => string;
 }
 
 const AttendeeTable: React.FC<AttendeeTableProps> = ({ 
