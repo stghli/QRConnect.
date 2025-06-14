@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { FileText, Download, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,23 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cheatsheets, toolkits, slides } from '../resources/ResourcesData';
+import type { Resource, Resources, ResourceType } from '../../hooks/useResourceManagement';
 
-interface Resource {
-  title: string;
-  description: string;
-  filename: string;
-  size: string;
-  category: string;
+interface AdminResourcesListProps {
+  resources: Resources;
+  onAddResource: (resourceType: ResourceType, resource: Resource) => void;
+  onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
+  onDeleteResource: (resourceType: ResourceType, index: number) => void;
 }
 
-const AdminResourcesList: React.FC = () => {
-  const [allResources, setAllResources] = useState<{ [key: string]: Resource[] }>({
-    cheatsheets: [...cheatsheets],
-    toolkits: [...toolkits],
-    slides: [...slides]
-  });
-  
+const AdminResourcesList: React.FC<AdminResourcesListProps> = ({
+  resources: allResources,
+  onAddResource,
+  onUpdateResource,
+  onDeleteResource
+}) => {
   const [isAdding, setIsAdding] = useState(false);
   const [editingResource, setEditingResource] = useState<{ category: string; index: number } | null>(null);
   const [formData, setFormData] = useState<Resource & { resourceCategory: string }>({
@@ -47,7 +44,7 @@ const AdminResourcesList: React.FC = () => {
   };
 
   const handleEdit = (category: string, index: number) => {
-    const resource = allResources[category][index];
+    const resource = allResources[category as ResourceType][index];
     setEditingResource({ category, index });
     setFormData({
       ...resource,
@@ -60,7 +57,7 @@ const AdminResourcesList: React.FC = () => {
       return;
     }
 
-    const newResource = {
+    const newResource: Resource = {
       title: formData.title,
       description: formData.description,
       filename: formData.filename,
@@ -69,14 +66,10 @@ const AdminResourcesList: React.FC = () => {
     };
 
     if (editingResource) {
-      const updatedResources = { ...allResources };
-      updatedResources[editingResource.category][editingResource.index] = newResource;
-      setAllResources(updatedResources);
+      onUpdateResource(editingResource.category as ResourceType, editingResource.index, newResource);
       setEditingResource(null);
     } else {
-      const updatedResources = { ...allResources };
-      updatedResources[formData.resourceCategory].push(newResource);
-      setAllResources(updatedResources);
+      onAddResource(formData.resourceCategory as ResourceType, newResource);
       setIsAdding(false);
     }
 
@@ -104,9 +97,7 @@ const AdminResourcesList: React.FC = () => {
   };
 
   const handleDelete = (category: string, index: number) => {
-    const updatedResources = { ...allResources };
-    updatedResources[category].splice(index, 1);
-    setAllResources(updatedResources);
+    onDeleteResource(category as ResourceType, index);
   };
 
   const handleDownload = (fileName: string) => {

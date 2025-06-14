@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,29 +14,38 @@ import AdminUserManagement from './admin/AdminUserManagement';
 import AnimatedBackground from './AnimatedBackground';
 import AdminFeedbackView from './admin/AdminFeedbackView';
 import type { Attendee, ScheduleItem, Feedback } from '../types';
+import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
 
 interface AdminDashboardProps {
   attendees: Attendee[];
   schedule: ScheduleItem[];
   feedback: Feedback[];
+  resources: Resources;
   onScheduleUpdate: (newSchedule: ScheduleItem[]) => void;
   onBack: () => void;
   onAddAttendee: (name: string) => Attendee | undefined;
   onRemoveAttendee: (id: string) => void;
   onRegenerateCode: (id: string) => string;
   onSendNotification: (title: string, message: string) => void;
+  onAddResource: (resourceType: ResourceType, resource: Resource) => void;
+  onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
+  onDeleteResource: (resourceType: ResourceType, index: number) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   attendees, 
   schedule, 
   feedback,
+  resources,
   onScheduleUpdate, 
   onBack,
   onAddAttendee,
   onRemoveAttendee,
   onRegenerateCode,
-  onSendNotification
+  onSendNotification,
+  onAddResource,
+  onUpdateResource,
+  onDeleteResource
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'userManagement' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
 
@@ -65,7 +75,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           onRegenerateCode={onRegenerateCode}
         />;
       case 'resources':
-        return <AdminResourcesList />;
+        return <AdminResourcesList 
+          resources={resources}
+          onAddResource={onAddResource}
+          onUpdateResource={onUpdateResource}
+          onDeleteResource={onDeleteResource}
+        />;
       case 'analytics':
         return <AnalyticsView attendees={attendees} />;
       case 'schedule':

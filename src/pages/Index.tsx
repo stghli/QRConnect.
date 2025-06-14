@@ -14,6 +14,7 @@ const Index = () => {
     attendees,
     schedule,
     feedback,
+    resources,
     handleAdminLogin,
     setCurrentScreen,
     handleRegistration,
@@ -27,6 +28,9 @@ const Index = () => {
     handleRegenerateCode,
     handleAdminSendNotification,
     handleFeedbackSubmit,
+    handleAddResource,
+    handleUpdateResource,
+    handleDeleteResource,
   } = useAppController();
 
   return (
@@ -56,6 +60,10 @@ const Index = () => {
           onRegenerateCode={handleRegenerateCode}
           onAdminSendNotification={handleAdminSendNotification}
           onFeedbackSubmit={handleFeedbackSubmit}
+          resources={resources}
+          onAddResource={handleAddResource}
+          onUpdateResource={handleUpdateResource}
+          onDeleteResource={handleDeleteResource}
         />
       </div>
 

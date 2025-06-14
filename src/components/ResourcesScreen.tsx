@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FileText, FolderOpen, Book, Wrench } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,14 +7,16 @@ import ResourcesHeader from './resources/ResourcesHeader';
 import WelcomeMessage from './resources/WelcomeMessage';
 import ResourcesFooter from './resources/ResourcesFooter';
 import DocumentViewer from './resources/DocumentViewer';
-import { cheatsheets, toolkits, slides } from './resources/ResourcesData';
+import type { Resources } from '../hooks/useResourceManagement';
 
 interface ResourcesScreenProps {
   userName: string;
   onBack: () => void;
+  resources: Resources;
 }
 
-const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack }) => {
+const ResourcesScreen: React.FC<ResourcesScreenProps> = ({ userName, onBack, resources }) => {
+  const { cheatsheets, toolkits, slides } = resources;
   const [viewerState, setViewerState] = useState<{
     isOpen: boolean;
     filename: string;

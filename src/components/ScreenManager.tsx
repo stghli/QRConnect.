@@ -1,4 +1,3 @@
-
 import React from 'react';
 import QRCodeScreen from './QRCodeScreen';
 import WelcomeScreen from './WelcomeScreen';
@@ -12,6 +11,7 @@ import CodeVerificationScreen from './CodeVerificationScreen';
 import CheckedInScreen from './CheckedInScreen';
 import FeedbackScreen from './FeedbackScreen';
 import type { ScreenType, Attendee, ScheduleItem, Feedback } from '../types';
+import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
 
 interface ScreenManagerProps {
   currentScreen: ScreenType;
@@ -20,6 +20,7 @@ interface ScreenManagerProps {
   feedback: Feedback[];
   currentUser: string;
   isAdmin: boolean;
+  resources: Resources;
   onAdminLogin: (username: string, password: string) => boolean;
   setCurrentScreen: (screen: ScreenType) => void;
   onGoToCodeVerification: () => void;
@@ -33,6 +34,9 @@ interface ScreenManagerProps {
   onRegenerateCode: (id: string) => string;
   onAdminSendNotification: (title: string, message: string) => void;
   onFeedbackSubmit: (rating: number, comment: string) => void;
+  onAddResource: (resourceType: ResourceType, resource: Resource) => void;
+  onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
+  onDeleteResource: (resourceType: ResourceType, index: number) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -42,6 +46,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   feedback,
   currentUser,
   isAdmin,
+  resources,
   onAdminLogin,
   setCurrentScreen,
   onGoToCodeVerification,
@@ -54,7 +59,10 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   onRemoveAttendee,
   onRegenerateCode,
   onAdminSendNotification,
-  onFeedbackSubmit
+  onFeedbackSubmit,
+  onAddResource,
+  onUpdateResource,
+  onDeleteResource,
 }) => {
   switch (currentScreen) {
     case 'qr':
@@ -84,6 +92,10 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           onRemoveAttendee={onRemoveAttendee}
           onRegenerateCode={onRegenerateCode}
           onSendNotification={onAdminSendNotification}
+          resources={resources}
+          onAddResource={onAddResource}
+          onUpdateResource={onUpdateResource}
+          onDeleteResource={onDeleteResource}
         />
       );
     case 'welcome':
@@ -137,6 +149,7 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
         <ResourcesScreen
           userName={currentUser}
           onBack={() => setCurrentScreen('program')}
+          resources={resources}
         />
       );
     default:

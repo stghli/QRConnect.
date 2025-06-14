@@ -1,10 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import { useUserSession } from './useUserSession';
 import { useAttendeeManagement } from './useAttendeeManagement';
 import { useScheduleManagement } from './useScheduleManagement';
 import { useNotificationSystem } from './useNotificationSystem';
 import { useFeedbackManagement } from './useFeedbackManagement';
+import { useResourceManagement } from './useResourceManagement';
 import { toast } from 'sonner';
 import type { Attendee } from '../types';
 
@@ -32,6 +32,7 @@ export const useAppController = () => {
   const { schedule, handleScheduleUpdate } = useScheduleManagement();
   const { notifications, addNotification } = useNotificationSystem();
   const { feedback, addFeedback } = useFeedbackManagement();
+  const { resources, handleAddResource, handleUpdateResource, handleDeleteResource } = useResourceManagement();
   const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -113,6 +114,7 @@ export const useAppController = () => {
     attendees,
     schedule,
     feedback,
+    resources,
     isReturningUser,
     handleAdminLogin,
     setCurrentScreen,
@@ -127,5 +129,8 @@ export const useAppController = () => {
     handleRegenerateCode,
     handleAdminSendNotification,
     handleFeedbackSubmit,
+    handleAddResource,
+    handleUpdateResource,
+    handleDeleteResource,
   };
 };
