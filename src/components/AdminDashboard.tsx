@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
 import AdminResourcesList from './admin/AdminResourcesList';
 import AdminAnalytics from './admin/AdminAnalytics';
+import AnalyticsView from './admin/AnalyticsView';
 import AdminScheduleManager from './admin/AdminScheduleManager';
 import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
@@ -30,7 +30,7 @@ interface AdminDashboardProps {
   schedule: ScheduleItem[];
   onScheduleUpdate: (newSchedule: ScheduleItem[]) => void;
   onBack: () => void;
-  onAddAttendee: (name: string) => void;
+  onAddAttendee: (name: string) => Attendee | undefined;
   onRemoveAttendee: (id: string) => void;
   onRegenerateCode: (id: string) => string;
   onSendNotification: (title: string, message: string) => void;
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       case 'resources':
         return <AdminResourcesList />;
       case 'analytics':
-        return <AdminAnalytics attendees={attendees} />;
+        return <AnalyticsView attendees={attendees} />;
       case 'schedule':
         return <AdminScheduleManager schedule={schedule} onScheduleUpdate={onScheduleUpdate} />;
       case 'notifications':
@@ -124,7 +124,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 >
                   <Icon className="w-4 h-4 mr-2" />
                   {tab.label}
-                  {tab.count && (
+                  {tab.count !== undefined && (
                     <span className="ml-1 bg-elegant-accent/30 text-elegant-accent px-2 py-0.5 rounded-full text-xs">
                       {tab.count}
                     </span>
