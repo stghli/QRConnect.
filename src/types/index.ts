@@ -5,6 +5,8 @@ export interface Attendee {
   name: string;
   registeredAt: Date;
   accessCode: string;
+  checkedIn: boolean;
+  checkedInAt: Date | null;
 }
 
 export interface ScheduleItem {

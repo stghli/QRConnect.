@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useUserSession } from './useUserSession';
 import { useAttendeeManagement } from './useAttendeeManagement';
@@ -29,6 +28,8 @@ export const useAppController = () => {
     handleRemoveAttendee,
     handleRegenerateCode,
     getCurrentUser,
+    handleCheckIn,
+    handleUndoCheckIn,
   } = useAttendeeManagement();
 
   const { schedule, handleScheduleUpdate } = useScheduleManagement();
@@ -138,5 +139,7 @@ export const useAppController = () => {
     handleDeleteResource,
     trackDownload,
     trackView,
+    handleCheckIn,
+    handleUndoCheckIn,
   };
 };

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import type { Attendee } from '../types';
 import { generateAccessCode } from '../utils/codeGenerator';
@@ -8,10 +7,12 @@ export const useAttendeeManagement = () => {
     try {
       const storedAttendees = window.localStorage.getItem('attendees');
       if (storedAttendees) {
-        // Need to parse date strings back into Date objects
-        return JSON.parse(storedAttendees).map((attendee: Omit<Attendee, 'registeredAt'> & { registeredAt: string }) => ({
+        // Need to parse date strings back into Date objects and add new fields for old data
+        return JSON.parse(storedAttendees).map((attendee: any) => ({
           ...attendee,
           registeredAt: new Date(attendee.registeredAt),
+          checkedIn: attendee.checkedIn || false,
+          checkedInAt: attendee.checkedInAt ? new Date(attendee.checkedInAt) : null,
         }));
       }
       return [];
@@ -45,6 +46,8 @@ export const useAttendeeManagement = () => {
       name,
       registeredAt: new Date(),
       accessCode,
+      checkedIn: false,
+      checkedInAt: null,
     };
     setAttendees([...attendees, newAttendee]);
     
@@ -61,6 +64,22 @@ export const useAttendeeManagement = () => {
 
   const verifyAccessCode = (code: string): Attendee | undefined => {
     return attendees.find(attendee => attendee.accessCode === code);
+  };
+
+  const handleCheckIn = (id: string) => {
+    setAttendees(currentAttendees => currentAttendees.map(attendee => 
+      attendee.id === id && !attendee.checkedIn
+        ? { ...attendee, checkedIn: true, checkedInAt: new Date() }
+        : attendee
+    ));
+  };
+
+  const handleUndoCheckIn = (id: string) => {
+    setAttendees(currentAttendees => currentAttendees.map(attendee =>
+      attendee.id === id && attendee.checkedIn
+        ? { ...attendee, checkedIn: false, checkedInAt: null }
+        : attendee
+    ));
   };
 
   const handleRemoveAttendee = (id: string) => {
@@ -89,5 +108,7 @@ export const useAttendeeManagement = () => {
     handleRemoveAttendee,
     handleRegenerateCode,
     getCurrentUser,
+    handleCheckIn,
+    handleUndoCheckIn,
   };
 };

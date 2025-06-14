@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, MessageSquare } from 'lucide-react';
+import { Shield, Users, FileText, Settings, ArrowLeft, BarChart, Calendar, Bell, MessageSquare, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminOverview from './admin/AdminOverview';
 import AdminAttendeesList from './admin/AdminAttendeesList';
@@ -12,6 +12,7 @@ import AdminNotifications from './admin/AdminNotifications';
 import AdminSettings from './admin/AdminSettings';
 import AnimatedBackground from './AnimatedBackground';
 import AdminFeedbackView from './admin/AdminFeedbackView';
+import AdminCheckin from './admin/AdminCheckin';
 import type { Attendee, ScheduleItem, Feedback } from '../types';
 import type { Resource, Resources, ResourceType } from '../hooks/useResourceManagement';
 import type { AnalyticsData } from '../hooks/useAnalytics';
@@ -32,6 +33,8 @@ interface AdminDashboardProps {
   onUpdateResource: (resourceType: ResourceType, index: number, resource: Resource) => void;
   onDeleteResource: (resourceType: ResourceType, index: number) => void;
   analytics: AnalyticsData;
+  onCheckIn: (id: string) => void;
+  onUndoCheckIn: (id: string) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
@@ -49,11 +52,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onUpdateResource,
   onDeleteResource,
   analytics,
+  onCheckIn,
+  onUndoCheckIn,
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'checkin' | 'attendees' | 'resources' | 'analytics' | 'schedule' | 'notifications' | 'settings' | 'feedback'>('overview');
+  const checkedInCount = attendees.filter(a => a.checkedIn).length;
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Shield, component: AdminOverview },
+    { id: 'checkin', label: 'Check-in', icon: Check, component: AdminCheckin, count: checkedInCount },
     { id: 'attendees', label: 'Attendees', icon: Users, component: AdminAttendeesList, count: attendees.length },
     { id: 'resources', label: 'Resources', icon: FileText, component: AdminResourcesList },
     { id: 'analytics', label: 'Analytics', icon: BarChart, component: AdminAnalytics },
@@ -67,6 +74,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     switch (activeTab) {
       case 'overview':
         return <AdminOverview attendees={attendees} />;
+      case 'checkin':
+        return <AdminCheckin
+          attendees={attendees}
+          onCheckIn={onCheckIn}
+          onUndoCheckIn={onUndoCheckIn}
+        />;
       case 'attendees':
         return <AdminAttendeesList 
           attendees={attendees} 

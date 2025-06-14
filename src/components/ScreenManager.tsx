@@ -41,6 +41,8 @@ interface ScreenManagerProps {
   analytics: AnalyticsData;
   trackDownload: (filename: string) => void;
   trackView: (filename: string) => void;
+  onCheckIn: (id: string) => void;
+  onUndoCheckIn: (id: string) => void;
 }
 
 const ScreenManager: React.FC<ScreenManagerProps> = ({
@@ -70,6 +72,8 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
   analytics,
   trackDownload,
   trackView,
+  onCheckIn,
+  onUndoCheckIn,
 }) => {
   switch (currentScreen) {
     case 'qr':
@@ -104,6 +108,8 @@ const ScreenManager: React.FC<ScreenManagerProps> = ({
           onUpdateResource={onUpdateResource}
           onDeleteResource={onDeleteResource}
           analytics={analytics}
+          onCheckIn={onCheckIn}
+          onUndoCheckIn={onUndoCheckIn}
         />
       );
     case 'welcome':
