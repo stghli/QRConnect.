@@ -6,12 +6,14 @@ const defaultSchedule: ScheduleItem[] = [
   {
     time: '9:00 AM',
     title: 'Introduction & Welcome',
-    description: 'Overview of the workshop and introductions'
+    description: 'Overview of the workshop and introductions',
+    speaker: 'Dr. Sarah Johnson'
   },
   {
     time: '10:30 AM',
     title: 'Threat Landscape',
-    description: 'Current cyber threats and attack vectors'
+    description: 'Current cyber threats and attack vectors',
+    speaker: 'Michael Chen'
   },
   {
     time: '12:00 PM',
@@ -21,17 +23,20 @@ const defaultSchedule: ScheduleItem[] = [
   {
     time: '1:30 PM',
     title: 'Hands-on Lab',
-    description: 'Practical cybersecurity exercises'
+    description: 'Practical cybersecurity exercises',
+    speaker: 'Alex Rodriguez'
   },
   {
     time: '3:30 PM',
     title: 'Panel Discussion',
-    description: 'Q&A with industry experts'
+    description: 'Q&A with industry experts',
+    speaker: 'Panel of Experts'
   },
   {
     time: '4:30 PM',
     title: 'Closing Remarks',
-    description: 'Workshop summary and next steps'
+    description: 'Workshop summary and next steps',
+    speaker: 'Dr. Sarah Johnson'
   }
 ];
 

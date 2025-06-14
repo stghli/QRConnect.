@@ -4,12 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, Trash2, Save, X, Clock } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Clock, User } from 'lucide-react';
 
 interface ScheduleItem {
   time: string;
   title: string;
   description: string;
+  speaker?: string;
 }
 
 interface AdminScheduleManagerProps {
@@ -20,7 +21,7 @@ interface AdminScheduleManagerProps {
 const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, onScheduleUpdate }) => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [formData, setFormData] = useState<ScheduleItem>({ time: '', title: '', description: '' });
+  const [formData, setFormData] = useState<ScheduleItem>({ time: '', title: '', description: '', speaker: '' });
 
   const handleEdit = (index: number) => {
     setEditingIndex(index);
@@ -47,13 +48,13 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
     onScheduleUpdate(newSchedule);
     setEditingIndex(null);
     setIsAdding(false);
-    setFormData({ time: '', title: '', description: '' });
+    setFormData({ time: '', title: '', description: '', speaker: '' });
   };
 
   const handleCancel = () => {
     setEditingIndex(null);
     setIsAdding(false);
-    setFormData({ time: '', title: '', description: '' });
+    setFormData({ time: '', title: '', description: '', speaker: '' });
   };
 
   const handleDelete = (index: number) => {
@@ -63,7 +64,7 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
 
   const handleAdd = () => {
     setIsAdding(true);
-    setFormData({ time: '', title: '', description: '' });
+    setFormData({ time: '', title: '', description: '', speaker: '' });
   };
 
   return (
@@ -94,7 +95,7 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
             {isAdding && (
               <div className="bg-white/5 rounded-lg p-4 border border-green-300/20">
                 <h3 className="text-white font-semibold mb-4">Add New Session</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="time" className="text-blue-200">Time</Label>
                     <Input
@@ -113,6 +114,16 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       className="bg-white/10 border-white/20 text-white"
                       placeholder="Session title"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="speaker" className="text-blue-200">Speaker (Optional)</Label>
+                    <Input
+                      id="speaker"
+                      value={formData.speaker || ''}
+                      onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white"
+                      placeholder="Speaker name"
                     />
                   </div>
                   <div>
@@ -145,7 +156,7 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
                 {editingIndex === index ? (
                   <div>
                     <h3 className="text-white font-semibold mb-4">Edit Session</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor={`edit-time-${index}`} className="text-blue-200">Time</Label>
                         <Input
@@ -162,6 +173,15 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
                           id={`edit-title-${index}`}
                           value={formData.title}
                           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          className="bg-white/10 border-white/20 text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`edit-speaker-${index}`} className="text-blue-200">Speaker (Optional)</Label>
+                        <Input
+                          id={`edit-speaker-${index}`}
+                          value={formData.speaker || ''}
+                          onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
                           className="bg-white/10 border-white/20 text-white"
                         />
                       </div>
@@ -192,9 +212,15 @@ const AdminScheduleManager: React.FC<AdminScheduleManagerProps> = ({ schedule, o
                       <div className="text-blue-300 font-mono text-sm bg-blue-600/20 px-2 py-1 rounded">
                         {item.time}
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-white font-semibold">{item.title}</h3>
                         <p className="text-blue-200 text-sm">{item.description}</p>
+                        {item.speaker && (
+                          <div className="flex items-center mt-1">
+                            <User className="w-3 h-3 text-blue-300 mr-1" />
+                            <span className="text-blue-300 text-xs">{item.speaker}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex space-x-2">
